@@ -1,0 +1,63 @@
+<div class="pagetitle">
+    <h1>Banner List</h1>
+</div>
+
+<section class="section py-0">
+    <div class="row">
+        <div class="col-md-4 mb-4 align-self-center">
+            <input type="text" placeholder="Search" class="form-control" [(ngModel)]="searchText" name="searchText"
+                (keyup)="gs.getDataCount(bannerData, searchText)">
+        </div>
+
+        <div class="col-md-2 mb-4 align-self-center">
+            Total Record : {{gs.gridDataCount}}
+        </div>
+
+        <div class="col-md-6 mb-4 text-end">
+            <button type="button" class="btn btn-primary rounded-pill" [routerLink]="['/banners/New/Add']"
+                routerLinkActive="router-link-active">+ Add</button>
+        </div>
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Banners</h5>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Link</th>
+                                <th scope="col">Created Date</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container
+                                *ngFor="let item of bannerData | filter: searchText | paginate: { itemsPerPage: 10, currentPage: p }; index as k">
+                                <tr>
+                                    <th scope="row">{{k+1}}</th>
+                                    <td class="custom-size">
+                                        <img [src]="item?.image" alt="image">
+                                    </td>
+                                    <td class="custom-size">{{item?.redirectLink}}</td>
+                                    <td>{{item.createdAt | date:'mediumDate'}}</td>
+                                    <td style="font-size : 1.5rem;">
+                                        <!-- <i [routerLink]="['/blog', item._id , 'Edit']" title="Edit"
+                    class="pointer bi bi-pencil-fill me-2"></i> -->
+                                        <i (click)="deleteBanner(item._id)" title="Delete"
+                                            class="pointer bi bi-trash-fill"></i>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                    <br>
+                    <pagination-controls (pageChange)="p= $event"></pagination-controls>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</section>

@@ -1,0 +1,13 @@
+td.custom-size {
+    max-width: 200px;
+    max-height: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    img{
+      width: 100px;
+      height: 50px;
+      object-fit: cover;
+    }
+  }

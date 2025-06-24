@@ -1,0 +1,100 @@
+<div class="pagetitle">
+    <h1>Most Popular Products</h1>
+</div>
+
+<section class="section py-0">
+    <div class="row">
+        <div class="col-md-4 mb-4 align-self-center">
+            <input type="text" placeholder="Search" class="form-control" [(ngModel)]="searchText" name="searchText"
+                (keyup)="gs.getDataCount(allData, searchText)">
+        </div>
+
+        <div class="col-md-2 mb-4 align-self-center">
+            Total Record : {{gs.gridDataCount}}
+        </div>
+
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Products</h5>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Discount</th>
+                                <th scope="col">Brand</th>
+                                <th scope="col">Created Date</th>
+                                <th scope="col" class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let item of allData | filter: searchText; index as k">
+                                <tr>
+                                    <th scope="row">{{k+1}}</th>
+                                    <td><img class="uploaded-image" [src]="item?.product_images?.[0]" alt="img"></td>
+                                    <td>{{item.productname}} <span class="bs-selected"
+                                            *ngIf="item?.isMostPopular">selected</span> </td>
+                                    <td>{{item.price}}</td>
+                                    <td>{{item.discount}}</td>
+                                    <td>{{item.brand}}</td>
+                                    <td>{{item.createdAt | date:'mediumDate'}}</td>
+                                    <td class="most-popular-act text-center">
+                                        <button *ngIf="!item?.isMostPopular" class="Add" data-bs-toggle="modal"
+                                            data-bs-target="#addMPModal" (click)="selectedProduct = item">Add</button>
+                                        <button *ngIf="item?.isMostPopular" class="Remove" data-bs-toggle="modal"
+                                            data-bs-target="#removeMPModal"
+                                            (click)="selectedProduct = item">Remove</button>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div class="modal fade" id="addMPModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="text-end p-3">
+                <button type="button" id="btn-addMP" class="btn-close fs-3" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="text-center pb-3">
+                <p class="m-0 fs-5">Are you sure want to add</p>
+                <span class="fw-bold fs-5">{{selectedProduct?.productname}}</span>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="addToMostPopular()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="removeMPModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="text-end p-3">
+                <button type="button" id="btn-removeMP" class="btn-close fs-3" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="text-center pb-3">
+                <p class="m-0 fs-5">Are you sure want to remove</p>
+                <span class="fw-bold fs-5">{{selectedProduct?.productname}}</span>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="removeFromMostPopular()">Remove</button>
+            </div>
+        </div>
+    </div>
+</div>

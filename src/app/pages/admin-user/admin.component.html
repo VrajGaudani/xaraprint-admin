@@ -1,0 +1,69 @@
+<div class="pagetitle">
+  <h1>Size List</h1>
+  <!-- <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+      <li class="breadcrumb-item">Tables</li>
+      <li class="breadcrumb-item active">General</li>
+    </ol>
+  </nav> -->
+</div><!-- End Page Title -->
+
+<section class="section py-0">
+  <div class="row">
+    <div class="col-md-4 mb-4 align-self-center">
+      <input type="text" placeholder="Search" class="form-control" [(ngModel)]="searchText" name="searchText"
+        (keyup)="gs.getDataCount(allData, searchText)">
+    </div>
+
+    <div class="col-md-2 mb-4 align-self-center">
+      Total Record : {{gs.gridDataCount}}
+    </div>
+
+    <div class="col-md-6 mb-4 text-end">
+      <button type="button" class="btn btn-primary rounded-pill" [routerLink]="['/size/New/Add']"
+        routerLinkActive="router-link-active">+ Add</button>
+    </div>
+
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Size</h5>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Size</th>
+                <!-- <th scope="col">Height</th> -->
+                <th scope="col">Shape</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container
+                *ngFor="let item of allData | filter: searchText | paginate: { itemsPerPage: 10, currentPage: p }; index as k">
+                <tr>
+                  <th scope="row">{{k+1}}</th>
+                  <td>{{item.size}}</td>
+                  <!-- <td>{{item.height}}</td> -->
+                  <td>{{item.shape}}</td>
+                  <td style="font-size : 1.5rem;">
+                    <i [routerLink]="['/size', item._id , 'View']" routerLinkActive="router-link-active" title="View"
+                      class="pointer bi bi-eye-fill me-2"></i>
+                    <i [routerLink]="['/size', item._id , 'Edit']" title="Edit"
+                      class="pointer bi bi-pencil-fill me-2"></i>
+                    <i (click)="deleteSize(item._id, k)" title="Delete" class="pointer bi bi-trash-fill"></i>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+          <br>
+          <pagination-controls (pageChange)="p= $event"></pagination-controls>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</section>

@@ -1,0 +1,275 @@
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{keyType}} Product</h5>
+
+          <!-- General Form Elements -->
+          <form>
+            <div class="row mb-5">
+              <div class="mt-3 col-md-4">
+                <label>Order Number</label>
+                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.order_id"
+                  name="order_id" placeholder="Order">
+              </div>
+
+              <div class="mt-3 col-md-4">
+                <label>Order Status</label>
+                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.order_status"
+                  name="order_status" placeholder="order_status">
+              </div>
+
+              <div class="mt-3 col-md-4">
+                <label>Price</label>
+                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.price" name="price"
+                  placeholder="price">
+              </div>
+
+              <div class="my-3 col-md-12">
+                <label class="otherFont">Address <button (click)="userInfo()" type="button"
+                    class="btn btn-info rounded-pill"> User
+                    Info</button>
+                </label>
+              </div>
+
+              <div class="mt-3 col-md-3">
+                <label>Firstname</label>
+                <input type="text" class="form-control" [disabled]="isDisable"
+                  [(ngModel)]="formObj.billing_address.firstname" name="firstname" placeholder="firstname">
+              </div>
+
+              <div class="mt-3 col-md-3">
+                <label>Lastname</label>
+                <input type="text" class="form-control" [disabled]="isDisable"
+                  [(ngModel)]="formObj.billing_address.lastname" name="lastname" placeholder="lastname">
+              </div>
+
+              <div class="mt-3 col-md-3">
+                <label>Email</label>
+                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.user_id.email"
+                  name="email" placeholder="email">
+              </div>
+
+              <div class="mt-3 col-md-3">
+                <label>Phone</label>
+                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.billing_address.phone_no"
+                  name="phone" placeholder="phone">
+              </div>
+
+              <div class="mt-3 col-md-4">
+                <label>Country</label>
+                <input type="text" class="form-control" [disabled]="isDisable"
+                  [(ngModel)]="formObj.billing_address.country" name="country" placeholder="country">
+              </div>
+
+              <div class="mt-3 col-md-4">
+                <label>State</label>
+                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.billing_address.state"
+                  name="state" placeholder="state">
+              </div>
+
+              <div class="mt-3 col-md-4">
+                <label>Zip code</label>
+                <input type="text" class="form-control" [disabled]="isDisable"
+                  [(ngModel)]="formObj.billing_address.pincode" name="zip_code" placeholder="zip_code">
+              </div>
+
+              <div class="mt-3 col-md-6">
+                <label>Address</label>
+                <textarea type="text" class="form-control" [disabled]="isDisable"
+                  [(ngModel)]="formObj.billing_address.address" name="address" placeholder="address" cols="60"
+                  rows="3"></textarea>
+              </div>
+
+
+              <div class="my-3 col-md-12">
+                <label class="otherFont">Order Details (product is {{formObj.cart_id.length}})</label>
+              </div>
+
+              <div class="row">
+                <ng-container *ngFor="let item of formObj.cart_id; index as i">
+
+                  <!-- <div class="my-3 col-md-10">
+                  </div>
+
+                  <div class="my-3 col-md-2" *ngIf="!i">
+                    <button class="btn btn-primary" (click)="addOther(item, i)">
+                      Add Other
+                    </button>
+                  </div>
+
+                  <div class="my-3 col-md-2" *ngIf="i">
+                    <button class="btn btn-danger" (click)="removeOther(item, i)">
+                      Remove Other
+                    </button>
+                  </div> -->
+
+                  <div class="mt-3 col-md-6">
+                    <label>Product name</label>
+                    <input type="text" class="form-control" [disabled]="isDisable"
+                      [(ngModel)]="item.product_id.productname" name="productname-{{i}}" placeholder="productname">
+                  </div>
+
+                  <div class="mt-3 col-md-3">
+                    <label>Orignal price</label>
+                    <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="item.orignal_price"
+                      name="orignal_price-{{i}}" placeholder="orignal_price">
+                  </div>
+
+                  <div class="mt-3 col-md-3">
+                    <label>Discount price</label>
+                    <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="item.discount_amount"
+                      name="discount_amount-{{i}}" placeholder="discount_amount">
+                  </div>
+
+                  <div class="mt-3 col-md-3">
+                    <label>Discount %</label>
+                    <input type="text" class="form-control" [disabled]="isDisable"
+                      [(ngModel)]="item.discount_percentage" name="discount_percentage-{{i}}"
+                      placeholder="discount_percentage">
+                  </div>
+
+                  <div class="mt-3 col-md-3">
+                    <label>Final Price</label>
+                    <input style="border: 3px solid green;" type="text" class="form-control" [disabled]="isDisable"
+                      [(ngModel)]="item.after_discount_price" name="after_discount_price-{{i}}"
+                      placeholder="after_discount_price">
+                  </div>
+
+                  <div class="mt-3 col-md-3">
+                    <label>Qty</label>
+                    <input style="border: 3px solid green;" type="text" class="form-control" [disabled]="isDisable"
+                      [(ngModel)]="item.qty" name="qty-{{i}}" placeholder="qty">
+                  </div>
+
+                  <div class="mt-3 col-md-3">
+                    <label>Shape</label>
+                    <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="item.shape"
+                      name="shape-{{i}}" placeholder="shape">
+                  </div>
+
+                  <div class="mt-3 col-md-3">
+                    <label>Size</label>
+                    <input style="border: 3px solid green;" type="text" class="form-control" [disabled]="isDisable"
+                      [(ngModel)]="item.size" name="size-{{i}}" placeholder="size">
+                  </div>
+
+                  <div class="mt-3 col-md-3">
+                    <label>Custom Size</label>
+                    <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="item.custom_size"
+                      name="custom_size-{{i}}" placeholder="custom_size">
+                  </div>
+
+                  <div class="mt-3 col-md-3">
+                    <label>Upload art</label>
+                    <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="item.upload_art"
+                      name="upload_art-{{i}}" placeholder="upload_art">
+                  </div>
+
+                  <div class="mt-3 col-md-3" *ngIf="item.upload_art_image">
+                    <img (click)="imageViewModal(item.upload_art_image)" [src]="item.upload_art_image"
+                      width="40" height="40">
+                  </div>
+
+                  <ng-container *ngFor="let dd of item.details">
+                    <div class="mt-3 col-md-4">
+                      <h2>{{dd.main_title}}</h2>
+                      <ng-container *ngFor="let tt of dd.details">
+                        <img (click)="imageViewModal(tt.filename)" [src]="tt.filename" width="120"
+                          height="120">
+                        <span class="d-block mt-2">{{tt.name}}</span>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+
+                  <div style="border-top: 2px dotted black; margin-top: 20px;"></div>
+                </ng-container>
+              </div>
+
+              <div class="col-md-12 text-center mt-3">
+                <!-- <button class="btn btn-primary" *ngIf="keyType == 'Add'" (click)="submit()">Submit</button>
+                <button class="btn btn-primary" *ngIf="keyType == 'Edit'" (click)="update()">Update</button> -->
+                <button class="btn btn-secondary mx-2" [routerLink]="['/order-list']"
+                  routerLinkActive="router-link-active">Cancel</button>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+<div class="modal fade" id="imageModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Image Modal</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <img [src]="gs.imageUrl + imageName" width="100%">
+      </div>
+    </div>
+  </div>
+</div><!-- End Basic Modal-->
+
+
+<div class="modal fade" id="userModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">User Info</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <form>
+          <div class="container">
+            <div class="row mb-5">
+              <div class="mt-3 col-md-12">
+                <label>Firstname</label>
+                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.user_id.firstname"
+                  name="firstname" placeholder="firstname">
+              </div>
+
+              <div class="mt-3 col-md-12">
+                <label>Lastname</label>
+                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.user_id.lastname"
+                  name="lastname" placeholder="lastname">
+              </div>
+
+              <div class="mt-3 col-md-12">
+                <label>Email</label>
+                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.user_id.email"
+                  name="email" placeholder="email">
+              </div>
+
+              <div class="mt-3 col-md-12">
+                <label>Password</label>
+                <input type="password" class="form-control" [disabled]="isDisable"
+                  [(ngModel)]="formObj.user_id.password" name="password" placeholder="password">
+              </div>
+
+              <div class="mt-3 col-md-12">
+                <label>Phone</label>
+                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.user_id.phone_no"
+                  name="phone_no" placeholder="phone_no">
+              </div>
+
+              <div class="mt-3 col-md-12">
+                <label>Social Login</label>
+                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.user_id.social_id"
+                  name="social_id" placeholder="social_id">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div><!-- End Basic Modal-->

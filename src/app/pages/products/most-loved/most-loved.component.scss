@@ -1,0 +1,29 @@
+
+.most-loved-act{
+    button{
+        background: transparent;
+        border: none;
+        font-size: 14px;
+        font-weight: 500;
+        color: green;
+
+        &.Remove{
+            color: #e75f16f7;
+        }
+    }
+}
+
+.bs-selected{
+    background: linear-gradient(to right, #fe8c00, #f83600);
+    color: #fff;
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 20px;
+    margin-left: 5px;
+}
+
+.uploaded-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}

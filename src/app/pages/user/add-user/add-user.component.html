@@ -1,0 +1,64 @@
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{keyType}} User</h5>
+
+          <!-- General Form Elements -->
+          <form>
+            <div class="row mb-5">
+
+              <!--<div class="mt-3 col-md-4">
+              <label>Type</label>
+                <select class="form-select" [disabled]="isDisable" [(ngModel)]="formObj.type" name="type">
+                  <option value="" disabled>--Select--</option>
+                  <option value="USER">User</option>
+                  <option value="ADMIN">admin</option>
+                </select>
+              </div> -->
+
+              <div class="mt-3 col-md-4">
+                <label>First Name</label>
+                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.firstname"
+                  name="firstname" placeholder="First Name">
+              </div>
+
+              <div class="mt-3 col-md-4">
+                <label>Last Name</label>
+                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.lastname"
+                  name="lastname" placeholder="Last Name">
+              </div>
+
+              <div class="mt-3 col-md-4">
+                <label>Phone Number</label>
+                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.phone_no"
+                  name="phone_no" placeholder="Phone Number">
+              </div>
+
+              <div class="mt-3 col-md-4">
+                <label>Email</label>
+                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.email" name="email"
+                  placeholder="email">
+              </div>
+
+              <div class="mt-3 col-md-4">
+                <label>Password</label>
+                <input type="password" class="form-control" disabled [(ngModel)]="formObj.password" name="password"
+                  placeholder="password">
+              </div>
+
+              <div class="col-md-12 text-center mt-3">
+                <button class="btn btn-primary" *ngIf="keyType == 'Add'" (click)="submit()">Submit</button>
+                <button class="btn btn-primary" *ngIf="keyType == 'Edit'" (click)="update()">Update</button>
+                <button class="btn btn-secondary mx-2">Cancel</button>
+              </div>
+            </div>
+          </form><!-- End General Form Elements -->
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

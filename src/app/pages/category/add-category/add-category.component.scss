@@ -1,0 +1,21 @@
+.upload-btn{
+  background-color: #0d6efd;
+  margin: 10px 0px;
+  color: #fff;
+  border-radius: 5px;
+  padding: 7px;
+  border: none;
+  font-size: 14px;
+}
+
+button[disabled]{
+  opacity: 0.6;
+}
+
+.uploaded-image{
+  width: 50px;
+  height: 50px;
+  margin: 10px;
+  box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 35%);
+  object-fit: cover;
+}
