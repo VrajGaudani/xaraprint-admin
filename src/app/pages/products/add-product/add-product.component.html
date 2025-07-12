@@ -3,492 +3,826 @@
     <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title fs-3 fw-bolder">{{keyType}} Product</h5>
+          <!-- Header -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="card-title fs-3 fw-bolder mb-0">{{keyType}} Product</h5>
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-secondary" routerLink="/product-list">
+                <i class="bi bi-arrow-left"></i> Back to List
+              </button>
+            </div>
+          </div>
 
-          <!-- General Form Elements -->
-          <form>
-
-
-            <div class="row mb-5">
-
-              <div class="mt-3 col-md-6">
-                <label>Product Name</label>
-                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.productname"
-                  name="productname" placeholder="Product Name">
+          <!-- Progress Steps -->
+          <div class="progress-steps mb-4" *ngIf="keyType !== 'View'">
+            <div class="step-container">
+              <div class="step" 
+                   [class.active]="currentStep === 1" 
+                   [class.completed]="currentStep > 1"
+                   (click)="goToStep(1)">
+                <div class="step-number">1</div>
+                <div class="step-label">Basic Info</div>
               </div>
-
-              <div class="mt-3 col-md-4">
-                <label>Category</label>
-                <select class="form-select" [disabled]="isDisable" (change)="getSubCat(formObj.cat_id)"
-                  [(ngModel)]="formObj.cat_id" name="cat_id">
-                  <option value="" disabled>--Select--</option>
-                  <ng-container *ngFor="let item of allCates">
-                    <option [value]="item._id">{{item.name}}</option>
-                  </ng-container>
-                </select>
+              <div class="step-line" [class.completed]="currentStep > 1"></div>
+              
+              <div class="step" 
+                   [class.active]="currentStep === 2" 
+                   [class.completed]="currentStep > 2"
+                   (click)="goToStep(2)">
+                <div class="step-number">2</div>
+                <div class="step-label">Pricing</div>
               </div>
-
-              <div class="mt-3 col-md-4" *ngIf="formObj.cat_id">
-                <label>Sub Category</label>
-                <select class="form-select" [disabled]="isDisable" [(ngModel)]="formObj.sub_cat_id" name="sub_cat_id">
-                  <option value="" disabled>--Select--</option>
-                  <ng-container *ngFor="let item of sub_cat">
-                    <option [value]="item._id">{{item.name}}</option>
-                  </ng-container>
-                </select>
+              <div class="step-line" [class.completed]="currentStep > 2"></div>
+              
+              <div class="step" 
+                   [class.active]="currentStep === 3" 
+                   [class.completed]="currentStep > 3"
+                   (click)="goToStep(3)">
+                <div class="step-number">3</div>
+                <div class="step-label">Images</div>
               </div>
-
-              <div class="mt-3 col-12">
-                <label>Product Description</label>
-                <textarea class="form-control" style="height: 100px" [disabled]="isDisable"
-                  [(ngModel)]="formObj.product_description" name="product_description"
-                  placeholder="Product Description"></textarea>
+              <div class="step-line" [class.completed]="currentStep > 3"></div>
+              
+              <div class="step" 
+                   [class.active]="currentStep === 4" 
+                   [class.completed]="currentStep > 4"
+                   (click)="goToStep(4)">
+                <div class="step-number">4</div>
+                <div class="step-label">Sizes & Bulk</div>
               </div>
-
-
-              <div class="mt-3 col-md-4">
-                <label>Price</label>
-                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.price" name="price"
-                  placeholder="Price">
-              </div>
-
-              <div class="mt-3 col-md-4">
-                <label>Weight</label>
-                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.weight"
-                  name="weight" placeholder="Weight">
-              </div>
-
-              <div class="mt-3 col-md-4">
-                <label>Discount</label>
-                <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="formObj.discount"
-                  name="discount" placeholder="Discount">
-              </div>
-
-
-              <div class="mt-3 col-md-3 align-self-end">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="is_size" [(ngModel)]="formObj.is_size"
-                    name="size">
-                  <label class="form-check-label" for="is_size">
-                    Is Size
-                  </label>
-                </div>
-              </div>
-
-              <div class="mt-3 col-md-2 align-self-end" *ngIf="formObj.is_size">
-                <button (click)="showSize()" type="button" class="btn btn-info rounded-pill">Size</button>
-              </div>
-
-              <div class="mt-3 col-md-2 align-self-end">
-                <button (click)="showBulk()" type="button" class="btn btn-warning rounded-pill">Bulk</button>
-              </div>
-
-              <div class="mt-3 col-md-12">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="is_use_matrial"
-                    [(ngModel)]="formObj.is_use_matrial" name="is_use_matrial">
-                  <label class="form-check-label" for="is_use_matrial">
-                    Is use matrial
-                  </label>
-                </div>
-              </div>
-
-              <div class="mt-3 col-md-4" *ngIf="keyType == 'Add'">
-                <label>Upload Images</label>
-                <input [disabled]="isDisable" type="file" multiple accept=".png, .jpg, .jpeg" class="form-control"
-                  (change)="onFileSelected($event)">
-                <button [disabled]="selectedFiles.length <= 0" class="upload-btn" (click)="onSubmit()">Upload
-                  Files</button>
-              </div>
-
-              <div class="mt-3 col-md-8 images-list" *ngIf="keyType == 'Add'">
-                <img *ngFor="let img of imagePreviews" [src]="img" (click)="imageViewModal(img)">
-              </div>
-
-              <div class="mt-3 col-md-12 images-list" *ngIf="keyType == 'Edit' || keyType == 'View'">
-                <span>Product Image : </span>
-                <img *ngFor="let img of formObj.product_images" [src]="img" (click)="imageViewModal(img)">
-              </div>
-
-              <div class="mt-3 col-md-4" *ngIf="keyType == 'Edit'">
-                <label>Upload Images</label>
-                <input [disabled]="isDisable" type="file" multiple accept=".png, .jpg, .jpeg" class="form-control"
-                  (change)="onFileSelected($event)">
-                <button [disabled]="selectedFiles.length <= 0" class="upload-btn" (click)="onSubmit()">Update
-                  Files</button>
-              </div>
-
-              <div class="mt-3 col-md-8 images-list" *ngIf="keyType == 'Edit'">
-                <img *ngFor="let img of imagePreviews" [src]="img" (click)="imageViewModal(img)">
-              </div>
-
-
-
-              <br>
-              <br>
-              <br>
-              <br>
-              <br>
-
-              <div class="row">
-                <ng-container *ngFor="let item of formObj.otherObj; index as i">
-
-                  <div class="mt-3 col-md-3">
-                    <label class="otherFont">Other-{{i+1}}</label>
-                  </div>
-
-                  <div class="mt-3 col-md-7">
-                  </div>
-
-                  <div class="mt-3 col-md-2" *ngIf="!i">
-                    <button class="btn btn-primary" [disabled]="isDisable" (click)="addOther(item, i)">
-                      Add Other
-                    </button>
-                  </div>
-
-                  <div class="mt-3 col-md-2" *ngIf="i">
-                    <button class="btn btn-danger" [disabled]="isDisable" (click)="removeOther(item, i)">
-                      Remove Other
-                    </button>
-                  </div>
-
-                  <div class="mt-1 col-md-6">
-                    <label>Main Title</label>
-                    <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="item.main_title"
-                      name="Main Title-{{i}}" placeholder="Main Title">
-                  </div>
-
-                  <div class="mt-3 col-md-6">
-                  </div>
-
-                  <ng-container *ngFor="let data of item.details; index as k">
-
-                    <div class="mt-4 col-md-3">
-                      <label class="otherFont">Details-{{i+1}}-{{k+1}}</label>
-                    </div>
-
-                    <div class="mt-4 col-md-7">
-                    </div>
-
-                    <div class="mt-4 col-md-2" *ngIf="!k">
-                      <button [disabled]="isDisable" class="btn btn-primary" (click)="addDetails(data,i,k)">
-                        Add Detail
-                      </button>
-                    </div>
-
-                    <div class="mt-4 col-md-2" *ngIf="k">
-                      <button [disabled]="isDisable" class="btn btn-danger" (click)="removeDetails(data,i,k)">
-                        Remove Detail
-                      </button>
-                    </div>
-
-                    <div class="mt-1 col-md-6">
-                      <label>Name</label>
-                      <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="data.name"
-                        name="Main Name-{{i}}{{k}}" placeholder="Main Title">
-                    </div>
-
-                    <div class="mt-1 col-md-3">
-                      <label>Price</label>
-                      <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="data.price"
-                        name="price-{{i}}{{k}}" placeholder="Price">
-                    </div>
-
-                    <!-- <div class="mt-1 col-md-3">
-                      <label>Weight</label>
-                      <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="data.weight"
-                        name="weight-{{i}}{{k}}" placeholder="Weight">
-                    </div> -->
-
-                    <div class="mt-3 col-md-6">
-                      <label>Upload Photo</label>
-                      <input type="file" class="form-control" accept=".png, .jpg, .jpeg" [disabled]="isDisable"
-                        (change)="fileUpload($event, i, k)">
-                      <!-- <img *ngIf="data.filename" [src]="gs.imageUrl+data.filename"
-                        (click)="imageViewModal(data.filename)" class="clearfix pointer mt-3" height="125"> -->
-                    </div>
-
-
-                    <!-- <div class="mt-3 col-md-6">
-                      <label>Tag</label>
-                      <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="data.tag"
-                        name="tag-{{i}}{{k}}" placeholder="Tag">
-                    </div> -->
-
-
-
-                    <div class="mt-3 col-12 images-list">
-                      <img *ngIf="data.filename" [src]="data.filename" (click)="imageViewModal(data.filename)"
-                        class="clearfix pointer mt-3" height="125">
-                    </div>
-
-                  </ng-container>
-
-                  <div style="border-top: 2px dotted black; margin-top: 20px;"></div>
-                </ng-container>
-              </div>
-              <div class="col-md-12 text-center mt-3">
-                <button class="btn btn-primary" *ngIf="keyType == 'Add'" (click)="submit()">Submit</button>
-                <button class="btn btn-primary" *ngIf="keyType == 'Edit'" (click)="update()">Update</button>
-                <button class="btn btn-secondary mx-2" routerLink="/product-list">Cancel</button>
+              <div class="step-line" [class.completed]="currentStep > 4"></div>
+              
+              <div class="step" 
+                   [class.active]="currentStep === 5" 
+                   [class.completed]="currentStep > 5"
+                   (click)="goToStep(5)">
+                <div class="step-number">5</div>
+                <div class="step-label">Options</div>
               </div>
             </div>
-          </form><!-- End General Form Elements -->
+          </div>
 
+          <!-- Loading Spinner -->
+          <div *ngIf="isSpinner" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading product data...</p>
+          </div>
+
+          <!-- Form Content -->
+          <form *ngIf="!isSpinner">
+            
+            <!-- Step 1: Basic Information -->
+            <div *ngIf="currentStep === 1 || keyType === 'View'" class="step-content">
+              <div class="section-header">
+                <h6 class="section-title">
+                  <i class="bi bi-info-circle me-2"></i>Basic Information
+                </h6>
+                <p class="section-description">Enter the basic details about your product</p>
+              </div>
+
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label class="form-label required">Product Name</label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      [class.is-invalid]="formErrors.productname"
+                      [disabled]="isDisable" 
+                      [(ngModel)]="formObj.productname"
+                      name="productname" 
+                      placeholder="Enter product name">
+                    <div class="invalid-feedback">{{formErrors.productname}}</div>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="form-label required">SKU</label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      [class.is-invalid]="formErrors.SKU"
+                      [disabled]="isDisable" 
+                      [(ngModel)]="formObj.SKU"
+                      name="SKU" 
+                      placeholder="Product SKU">
+                    <div class="invalid-feedback">{{formErrors.SKU}}</div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-label required">Category</label>
+                    <select 
+                      class="form-select" 
+                      [class.is-invalid]="formErrors.cat_id"
+                      [disabled]="isDisable" 
+                      (change)="getSubCat(formObj.cat_id)"
+                      [(ngModel)]="formObj.cat_id" 
+                      name="cat_id">
+                      <option value="">Select Category</option>
+                      <option *ngFor="let item of allCates" [value]="item._id">{{item.name}}</option>
+                    </select>
+                    <div class="invalid-feedback">{{formErrors.cat_id}}</div>
+                  </div>
+                </div>
+
+                <div class="col-md-6" *ngIf="formObj.cat_id">
+                  <div class="form-group">
+                    <label class="form-label">Sub Category</label>
+                    <select 
+                      class="form-select" 
+                      [disabled]="isDisable" 
+                      [(ngModel)]="formObj.sub_cat_id" 
+                      name="sub_cat_id">
+                      <option value="">Select Sub Category</option>
+                      <option *ngFor="let item of sub_cat" [value]="item._id">{{item.name}}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="form-group">
+                    <label class="form-label required">Product Description</label>
+                    <textarea 
+                      class="form-control" 
+                      rows="4"
+                      [class.is-invalid]="formErrors.product_description"
+                      [disabled]="isDisable"
+                      [(ngModel)]="formObj.product_description" 
+                      name="product_description"
+                      placeholder="Describe your product in detail..."></textarea>
+                    <div class="invalid-feedback">{{formErrors.product_description}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: Pricing & Features -->
+            <div *ngIf="currentStep === 2 || keyType === 'View'" class="step-content">
+              <div class="section-header">
+                <h6 class="section-title">
+                  <i class="bi bi-currency-dollar me-2"></i>Pricing & Features
+                </h6>
+                <p class="section-description">Set pricing and product features</p>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="form-label required">Price ($)</label>
+                    <input 
+                      type="number" 
+                      class="form-control" 
+                      [class.is-invalid]="formErrors.price"
+                      [disabled]="isDisable" 
+                      [(ngModel)]="formObj.price" 
+                      (input)="onNumericInput($event, 'Price')"
+                      name="price" 
+                      min="0" 
+                      step="0.01"
+                      placeholder="0.00">
+                    <div class="invalid-feedback">{{formErrors.price}}</div>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="form-label required">Weight (lbs)</label>
+                    <input 
+                      type="number" 
+                      class="form-control" 
+                      [class.is-invalid]="formErrors.weight"
+                      [disabled]="isDisable" 
+                      [(ngModel)]="formObj.weight"
+                      (input)="onNumericInput($event, 'Weight')"
+                      name="weight" 
+                      min="0" 
+                      step="0.1"
+                      placeholder="0.0">
+                    <div class="invalid-feedback">{{formErrors.weight}}</div>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="form-label">Discount (%)</label>
+                    <input 
+                      type="number" 
+                      class="form-control" 
+                      [class.is-invalid]="formErrors.discount"
+                      [disabled]="isDisable" 
+                      [(ngModel)]="formObj.discount"
+                      (input)="onPercentageInput($event)"
+                      name="discount" 
+                      min="0" 
+                      max="100"
+                      placeholder="0">
+                    <div class="invalid-feedback">{{formErrors.discount}}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Product Features -->
+              <div class="features-section mt-4">
+                <h6 class="mb-3">Product Features</h6>
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-check feature-check">
+                      <input class="form-check-input" type="checkbox" 
+                             [(ngModel)]="formObj.design_support" name="design_support">
+                      <label class="form-check-label">Design Support</label>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-check feature-check">
+                      <input class="form-check-input" type="checkbox" 
+                             [(ngModel)]="formObj.free_design_proof" name="free_design_proof">
+                      <label class="form-check-label">Free Design Proof</label>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-check feature-check">
+                      <input class="form-check-input" type="checkbox" 
+                             [(ngModel)]="formObj.premium_quality" name="premium_quality">
+                      <label class="form-check-label">Premium Quality</label>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-check feature-check">
+                      <input class="form-check-input" type="checkbox" 
+                             [(ngModel)]="formObj.free_shipping" name="free_shipping">
+                      <label class="form-check-label">Free Shipping</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Product Tags -->
+              <div class="tags-section mt-4">
+                <h6 class="mb-3">Product Tags</h6>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-check tag-check">
+                      <input class="form-check-input" type="checkbox" 
+                             [(ngModel)]="formObj.isBestSelling" name="isBestSelling">
+                      <label class="form-check-label">Best Selling</label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-check tag-check">
+                      <input class="form-check-input" type="checkbox" 
+                             [(ngModel)]="formObj.isMostLoved" name="isMostLoved">
+                      <label class="form-check-label">Most Loved</label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-check tag-check">
+                      <input class="form-check-input" type="checkbox" 
+                             [(ngModel)]="formObj.isMostPopular" name="isMostPopular">
+                      <label class="form-check-label">Most Popular</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3: Images -->
+            <div *ngIf="currentStep === 3 || keyType === 'View'" class="step-content">
+              <div class="section-header">
+                <h6 class="section-title">
+                  <i class="bi bi-images me-2"></i>Product Images
+                </h6>
+                <p class="section-description">Upload high-quality images of your product</p>
+              </div>
+
+              <div class="upload-section" *ngIf="keyType !== 'View'">
+                <div class="upload-area">
+                  <input type="file" 
+                         multiple 
+                         accept=".png,.jpg,.jpeg" 
+                         class="form-control mb-3"
+                         (change)="onFileSelected($event)">
+                  <button type="button" 
+                          class="btn btn-primary upload-btn" 
+                          [disabled]="selectedFiles.length <= 0"
+                          (click)="onSubmit()">
+                    <i class="bi bi-cloud-upload me-2"></i>
+                    {{keyType === 'Edit' ? 'Update Images' : 'Upload Images'}}
+                  </button>
+                </div>
+
+                <!-- Preview Selected Images -->
+                <div class="preview-section" *ngIf="imagePreviews.length > 0">
+                  <h6 class="mt-4 mb-3">Selected Images Preview</h6>
+                  <div class="images-grid">
+                    <div class="image-item" *ngFor="let img of imagePreviews">
+                      <img [src]="img" (click)="imageViewModal(img)" class="preview-image">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Current Product Images -->
+              <div class="current-images" *ngIf="formObj.product_images?.length > 0">
+                <h6 class="mb-3">Current Product Images</h6>
+                <div class="images-grid">
+                  <div class="image-item" *ngFor="let img of formObj.product_images">
+                    <img [src]="img" (click)="imageViewModal(img)" class="product-image">
+                  </div>
+                </div>
+              </div>
+
+              <div class="alert alert-info mt-3" [class.is-invalid]="formErrors.product_images">
+                <i class="bi bi-info-circle me-2"></i>
+                Upload multiple high-quality images (PNG, JPG, JPEG) to showcase your product from different angles.
+              </div>
+              <div class="invalid-feedback d-block" *ngIf="formErrors.product_images">
+                {{formErrors.product_images}}
+              </div>
+            </div>
+
+            <!-- Step 4: Sizes & Bulk Pricing -->
+            <div *ngIf="currentStep === 4 || keyType === 'View'" class="step-content">
+              <div class="section-header">
+                <h6 class="section-title">
+                  <i class="bi bi-rulers me-2"></i>Sizes & Bulk Pricing
+                </h6>
+                <p class="section-description">Configure product sizes and bulk pricing options</p>
+              </div>
+
+              <!-- Size Configuration -->
+              <div class="size-section">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" 
+                           [(ngModel)]="formObj.is_size" name="is_size">
+                    <label class="form-check-label fw-bold">This product has different sizes</label>
+                  </div>
+                  <button type="button" 
+                          class="btn btn-outline-primary btn-sm" 
+                          *ngIf="formObj.is_size && !isDisable"
+                          (click)="showSize()">
+                    <i class="bi bi-plus-circle me-1"></i>Manage Sizes
+                  </button>
+                </div>
+
+                <!-- Sizes List -->
+                <div class="sizes-list" *ngIf="formObj.is_size && formObj.sizes?.length > 0">
+                  <div class="size-item" *ngFor="let size of formObj.sizes; let i = index">
+                    <div class="size-info">
+                      <span class="size-name">{{size.size}}</span>
+                      <span class="size-details">{{size.sq_ft}} inches</span>
+                      <span class="size-price">${{size.price}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bulk Pricing -->
+              <div class="bulk-section mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h6 class="mb-0">Bulk Pricing</h6>
+                  <button type="button" 
+                          class="btn btn-outline-warning btn-sm" 
+                          *ngIf="!isDisable"
+                          (click)="showBulk()">
+                    <i class="bi bi-plus-circle me-1"></i>Manage Bulk Pricing
+                  </button>
+                </div>
+
+                <!-- Bulk Pricing List -->
+                <div class="bulk-list" *ngIf="formObj.bulk_qty?.length > 0">
+                  <div class="bulk-item" *ngFor="let bulk of formObj.bulk_qty; let i = index">
+                    <div class="bulk-info">
+                      <span class="bulk-qty">{{bulk.qty}}+ items</span>
+                      <span class="bulk-discount">{{bulk.discount}}% discount</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 5: Additional Options -->
+            <div *ngIf="currentStep === 5 || keyType === 'View'" class="step-content">
+              <div class="section-header">
+                <h6 class="section-title">
+                  <i class="bi bi-gear me-2"></i>Additional Options
+                </h6>
+                <p class="section-description">Configure additional product options and customizations</p>
+              </div>
+
+              <!-- Custom Size Option -->
+              <div class="custom-size-section mb-4">
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="checkbox" 
+                         [(ngModel)]="formObj.add_custom_size" name="add_custom_size">
+                  <label class="form-check-label fw-bold">Allow customers to request custom sizes</label>
+                </div>
+
+                <div class="custom-size-price" *ngIf="formObj.add_custom_size">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <label class="form-label">Custom Size Price (per sq.ft)</label>
+                      <input type="number" 
+                             class="form-control" 
+                             [(ngModel)]="formObj.custom_size_price"
+                             name="custom_size_price" 
+                             min="0" 
+                             step="0.01"
+                             placeholder="0.00">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Product Options -->
+              <div class="options-section">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h6 class="mb-0">Product Options</h6>
+                  <button type="button" 
+                          class="btn btn-outline-success btn-sm" 
+                          *ngIf="!isDisable"
+                          (click)="addOther()">
+                    <i class="bi bi-plus-circle me-1"></i>Add Option
+                  </button>
+                </div>
+
+                <!-- Options List -->
+                <div class="options-list">
+                  <div class="option-card" *ngFor="let option of formObj.otherObj; let i = index">
+                    <div class="option-header">
+                      <h6 class="option-title">Option {{i + 1}}</h6>
+                      <button type="button" 
+                              class="btn btn-outline-danger btn-sm" 
+                              *ngIf="formObj.otherObj.length > 1 && !isDisable"
+                              (click)="removeOther(i)">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+
+                    <div class="option-content">
+                      <div class="form-group mb-3">
+                        <label class="form-label required">Option Title</label>
+                        <input type="text" 
+                               class="form-control" 
+                               [(ngModel)]="option.main_title"
+                               [name]="'option_title_' + i"
+                               placeholder="e.g., Backboard, Waterproof, etc.">
+                      </div>
+
+                      <!-- Option Details -->
+                      <div class="details-section">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                          <label class="form-label mb-0">Option Details</label>
+                          <button type="button" 
+                                  class="btn btn-outline-primary btn-sm" 
+                                  *ngIf="!isDisable"
+                                  (click)="addDetails(i)">
+                            <i class="bi bi-plus me-1"></i>Add Detail
+                          </button>
+                        </div>
+
+                        <div class="detail-item" *ngFor="let detail of option.details; let j = index">
+                          <div class="detail-header">
+                            <span class="detail-number">Detail {{j + 1}}</span>
+                            <button type="button" 
+                                    class="btn btn-outline-danger btn-sm" 
+                                    *ngIf="option.details.length > 1 && !isDisable"
+                                    (click)="removeDetails(i, j)">
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-4">
+                              <label class="form-label">Name</label>
+                              <input type="text" 
+                                     class="form-control" 
+                                     [(ngModel)]="detail.name"
+                                     [name]="'detail_name_' + i + '_' + j"
+                                     placeholder="Detail name">
+                            </div>
+                            <div class="col-md-3">
+                              <label class="form-label">Price ($)</label>
+                              <input type="number" 
+                                     class="form-control" 
+                                     [(ngModel)]="detail.price"
+                                     [name]="'detail_price_' + i + '_' + j"
+                                     min="0" 
+                                     step="0.01"
+                                     placeholder="0.00">
+                            </div>
+                            <div class="col-md-5">
+                              <label class="form-label">Image</label>
+                              <input type="file" 
+                                     class="form-control" 
+                                     accept=".png,.jpg,.jpeg"
+                                     (change)="fileUpload($event, i, j)">
+                              <img *ngIf="detail.filename" 
+                                   [src]="detail.filename" 
+                                   class="detail-image mt-2"
+                                   (click)="imageViewModal(detail.filename)">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="form-navigation" *ngIf="keyType !== 'View'">
+              <div class="d-flex justify-content-between">
+                <button type="button" 
+                        class="btn btn-outline-secondary" 
+                        *ngIf="currentStep > 1"
+                        (click)="prevStep()">
+                  <i class="bi bi-arrow-left me-2"></i>Previous
+                </button>
+                
+                <div class="ms-auto d-flex gap-2">
+                  <button type="button" 
+                          class="btn btn-outline-secondary" 
+                          routerLink="/product-list">
+                    Cancel
+                  </button>
+                  
+                  <button type="button" 
+                          class="btn btn-primary" 
+                          *ngIf="currentStep < totalSteps"
+                          (click)="nextStep()">
+                    Next <i class="bi bi-arrow-right ms-2"></i>
+                  </button>
+                  
+                  <button type="button" 
+                          class="btn btn-success" 
+                          *ngIf="currentStep === totalSteps"
+                          [disabled]="isSpinner"
+                          (click)="keyType === 'Add' ? submit() : update()">
+                    <span *ngIf="isSpinner" class="spinner-border spinner-border-sm me-2"></span>
+                    <i *ngIf="!isSpinner" class="bi bi-check-circle me-2"></i>
+                    {{keyType === 'Add' ? 'Create Product' : 'Update Product'}}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- View Mode Actions -->
+            <div class="text-center mt-4" *ngIf="keyType === 'View'">
+              <button class="btn btn-outline-secondary" routerLink="/product-list">
+                <i class="bi bi-arrow-left me-2"></i>Back to List
+              </button>
+            </div>
+
+          </form>
         </div>
       </div>
-
     </div>
   </div>
 </section>
 
+<!-- Modals -->
+<!-- Image View Modal -->
 <div class="modal fade" id="imageModal" tabindex="-1">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Basic Modal</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title">Image Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body p-0">
-        <img [src]="imageName" width="100%">
+        <img [src]="imageName" class="w-100">
       </div>
     </div>
   </div>
-</div><!-- End Basic Modal-->
+</div>
 
-
-
+<!-- Size Management Modal -->
 <div class="modal fade" id="sizeModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Size Modal</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title">Manage Sizes</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <div class="row">
-          <div class="col-lg-12" *ngIf="!sizeKeyType">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">Size <button (click)="addSize()" class="btn btn-info rounded-pill"
-                    style="float: inline-end;">+
-                    Add</button></h5>
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Size</th>
-                      <th scope="col">Price</th>
-                      <!-- <th scope="col">Shape</th> -->
-                      <th scope="col">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <ng-container *ngFor="let item of formObj.sizes; index as k">
-                      <tr>
-                        <th scope="row">{{k+1}}</th>
-                        <td>{{item.size}}</td>
-                        <td>{{item.price}}</td>
-                        <!-- <td>{{item.shape}}</td> -->
-                        <td style="font-size : 1.5rem;">
-                          <!-- <i (click)="curdSize(item,k,'View')" title="View" class="pointer bi bi-eye-fill me-2"></i> -->
-                          <i (click)="curdSize(item,k,'Edit')" title="Edit" class="pointer bi bi-pencil-fill me-2"></i>
-                          <i (click)="deleteSize(item, k)" title="Delete" class="pointer bi bi-trash-fill"></i>
-                        </td>
-                      </tr>
-                    </ng-container>
-                  </tbody>
-                </table>
-                <br>
+        
+        <!-- Size List View -->
+        <div *ngIf="!sizeKeyType">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6>Product Sizes</h6>
+            <button class="btn btn-primary btn-sm" (click)="addSize()">
+              <i class="bi bi-plus-circle me-1"></i>Add Size
+            </button>
+          </div>
 
-                <label>Is user can add custom size?</label>
-                <input class="form-check-input mx-2" type="radio" [(ngModel)]="formObj.add_custom_size"
-                  name="gridRadios" id="gridRadios1" value="true">
-                <label class="form-check-label" for="gridRadios1">
-                  YES
-                </label>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Size (ft)</th>
+                  <th>Size (inches)</th>
+                  <th>Price</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let size of formObj.sizes; let i = index">
+                  <td>{{i + 1}}</td>
+                  <td>{{size.size}}</td>
+                  <td>{{size.sq_ft}}</td>
+                  <td>${{size.price}}</td>
+                  <td>
+                    <button class="btn btn-outline-primary btn-sm me-1" 
+                            (click)="curdSize(size, i, 'Edit')">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" 
+                            (click)="deleteSize(i)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-                <input class="form-check-input mx-2" type="radio" name="gridRadios"
-                  [(ngModel)]="formObj.add_custom_size" id="gridRadios2" value="false">
-                <label class="form-check-label" for="gridRadios2">
-                  NO
-                </label>
+          <!-- Custom Size Option -->
+          <div class="custom-size-config mt-4">
+            <h6>Custom Size Configuration</h6>
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" 
+                     [(ngModel)]="formObj.add_custom_size" name="add_custom_size">
+              <label class="form-check-label">Allow customers to request custom sizes</label>
+            </div>
 
-                <div style="width: 40%;" *ngIf="formObj.add_custom_size == 'true'">
-                  <label>Custom size price<span class="text-danger">*</span></label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    [disabled]="isDisable"
-                    [(ngModel)]="formObj.custom_size_price"
-                    (input)="onCustomSizePriceChange($event)"
-                    min="0"
-                    step="0.01"
-                    name="custom_size_price"
-                    placeholder="Custom size price per sq.ft">
-                </div>
-
+            <div *ngIf="formObj.add_custom_size" class="row">
+              <div class="col-md-6">
+                <label class="form-label">Custom Size Price (per sq.ft)</label>
+                <input type="number" 
+                       class="form-control" 
+                       [(ngModel)]="formObj.custom_size_price"
+                       name="custom_size_price" 
+                       min="0" 
+                       step="0.01"
+                       placeholder="0.00">
               </div>
             </div>
           </div>
-
-
-          <div class="col-lg-12" *ngIf="sizeKeyType">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">{{sizeKeyType}} Size</h5>
-                <form>
-                  <div class="row mb-5">
-                    <div class="mt-3 col-md-12">
-                      <label>Size (ft)</label>
-                      <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="sizeObj.size"
-                        name="size" placeholder="Size">
-                    </div>
-
-                    <div class="mt-3 col-md-4">
-                      <label>Size (In)<span class="text-danger">*</span></label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        [disabled]="isDisable"
-                        [(ngModel)]="sizeObj.sq_ft"
-                        name="sq_ft"
-                        placeholder="In">
-                    </div>
-
-                    <!-- <div class="mt-3 col-md-4">
-                      <label>Shape<span class="text-danger">*</span></label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        [disabled]="isDisable"
-                        [(ngModel)]="sizeObj.shape"
-                        name="shape"
-                        required
-                        placeholder="Shape">
-                    </div> -->
-
-                    <div class="mt-3 col-md-4">
-                      <label>Price<span class="text-danger">*</span></label>
-                      <input
-                        type="number"
-                        class="form-control"
-                        [disabled]="isDisable"
-                        [(ngModel)]="sizeObj.price"
-                        (input)="onSizeNumericInputChange($event, 'Price')"
-                        min="0"
-                        step="0.01"
-                        name="Price"
-                        placeholder="Price">
-                    </div>
-
-                    <div class="col-md-12 text-center mt-3">
-                      <button class="btn btn-primary" *ngIf="sizeKeyType == 'Add'"
-                        (click)="submitSize()">Submit</button>
-                      <button class="btn btn-primary" *ngIf="sizeKeyType == 'Edit'"
-                        (click)="updateSize()">Update</button>
-                      <button class="btn btn-secondary mx-2" (click)="cancle()">Cancel</button>
-                    </div>
-                  </div>
-                </form><!-- End General Form Elements -->
-
-              </div>
-            </div>
-
-          </div>
-
         </div>
+
+        <!-- Size Add/Edit Form -->
+        <div *ngIf="sizeKeyType">
+          <h6>{{sizeKeyType}} Size</h6>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label required">Size (ft)</label>
+                <input type="text" 
+                       class="form-control" 
+                       [(ngModel)]="sizeObj.size"
+                       name="size" 
+                       placeholder="e.g., 3 x 6">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label required">Size (inches)</label>
+                <input type="text" 
+                       class="form-control" 
+                       [(ngModel)]="sizeObj.sq_ft"
+                       name="sq_ft" 
+                       placeholder="e.g., 36 x 42">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label">Additional Price ($)</label>
+                <input type="number" 
+                       class="form-control" 
+                       [(ngModel)]="sizeObj.price"
+                       name="price" 
+                       min="0" 
+                       step="0.01"
+                       placeholder="0.00">
+              </div>
+            </div>
+          </div>
+
+          <div class="text-end mt-3">
+            <button class="btn btn-outline-secondary me-2" (click)="cancelSize()">Cancel</button>
+            <button class="btn btn-primary" 
+                    *ngIf="sizeKeyType === 'Add'"
+                    (click)="submitSize()">Add Size</button>
+            <button class="btn btn-primary" 
+                    *ngIf="sizeKeyType === 'Edit'"
+                    (click)="updateSize()">Update Size</button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
-</div><!-- End Large Modal-->
+</div>
 
-
-
-
-
-
-
-
+<!-- Bulk Pricing Modal -->
 <div class="modal fade" id="bulkModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Bulk Quantity Modal</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title">Manage Bulk Pricing</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <div class="row">
-          <div class="col-lg-12" *ngIf="!bulkKeyType">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">Quantity <button (click)="addBulk()" class="btn btn-info rounded-pill"
-                    style="float: inline-end;">+
-                    Add</button></h5>
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Qty</th>
-                      <th scope="col">Discount</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <ng-container *ngFor="let item of formObj.bulk_qty; index as k">
-                      <tr>
-                        <th scope="row">{{k+1}}</th>
-                        <td>{{item.qty}}</td>
-                        <td>{{item.discount}}</td>
-                        <td style="font-size : 1.5rem;">
-                          <!-- <i (click)="curdSize(item,k,'View')" title="View" class="pointer bi bi-eye-fill me-2"></i> -->
-                          <i (click)="curdBulk(item,k,'Edit')" title="Edit" class="pointer bi bi-pencil-fill me-2"></i>
-                          <i (click)="deleteBulk(item, k)" title="Delete" class="pointer bi bi-trash-fill"></i>
-                        </td>
-                      </tr>
-                    </ng-container>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+        
+        <!-- Bulk Pricing List View -->
+        <div *ngIf="!bulkKeyType">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6>Bulk Pricing Tiers</h6>
+            <button class="btn btn-warning btn-sm" (click)="addBulk()">
+              <i class="bi bi-plus-circle me-1"></i>Add Tier
+            </button>
           </div>
 
-
-          <div class="col-lg-12" *ngIf="bulkKeyType">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">{{bulkKeyType}} Quantity</h5>
-                <form>
-                  <div class="row mb-5">
-                    <div class="mt-3 col-md-6">
-                      <label>Quantity</label>
-                      <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="bulkObj.qty"
-                        name="qty" placeholder="QTY">
-                    </div>
-
-                    <div class="mt-3 col-md-6">
-                      <label>Discount</label>
-                      <input type="text" class="form-control" [disabled]="isDisable" [(ngModel)]="bulkObj.discount"
-                        name="discount" placeholder="Discount">
-                    </div>
-
-                    <div class="col-md-12 text-center mt-3">
-                      <button class="btn btn-primary" *ngIf="bulkKeyType == 'Add'"
-                        (click)="submitBulk()">Submit</button>
-                      <button class="btn btn-primary" *ngIf="bulkKeyType == 'Edit'"
-                        (click)="updateBulk()">Update</button>
-                      <button class="btn btn-secondary mx-2" (click)="cancle()">Cancel</button>
-                    </div>
-                  </div>
-                </form><!-- End General Form Elements -->
-
-              </div>
-            </div>
-
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Minimum Quantity</th>
+                  <th>Discount (%)</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let bulk of formObj.bulk_qty; let i = index">
+                  <td>{{i + 1}}</td>
+                  <td>{{bulk.qty}}+</td>
+                  <td>{{bulk.discount}}%</td>
+                  <td>
+                    <button class="btn btn-outline-primary btn-sm me-1" 
+                            (click)="curdBulk(bulk, i, 'Edit')">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" 
+                            (click)="deleteBulk(i)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-
         </div>
-      </div>
 
+        <!-- Bulk Pricing Add/Edit Form -->
+        <div *ngIf="bulkKeyType">
+          <h6>{{bulkKeyType}} Bulk Pricing Tier</h6>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label required">Minimum Quantity</label>
+                <input type="number" 
+                       class="form-control" 
+                       [(ngModel)]="bulkObj.qty"
+                       name="qty" 
+                       min="1"
+                       placeholder="e.g., 5">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label required">Discount (%)</label>
+                <input type="number" 
+                       class="form-control" 
+                       [(ngModel)]="bulkObj.discount"
+                       name="discount" 
+                       min="0" 
+                       max="100"
+                       placeholder="e.g., 10">
+              </div>
+            </div>
+          </div>
+
+          <div class="text-end mt-3">
+            <button class="btn btn-outline-secondary me-2" (click)="cancelBulk()">Cancel</button>
+            <button class="btn btn-warning" 
+                    *ngIf="bulkKeyType === 'Add'"
+                    (click)="submitBulk()">Add Tier</button>
+            <button class="btn btn-warning" 
+                    *ngIf="bulkKeyType === 'Edit'"
+                    (click)="updateBulk()">Update Tier</button>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
-</div><!-- End Large Modal-->
+</div>
