@@ -118,7 +118,7 @@ export class AddProductComponent implements OnInit {
   loadCategories() {
     this.httpService.get(APIURLs.mainCatListAPI).subscribe(
       (res: any) => {
-        this.allCates = res.data
+        this.allCates = res.data?.data || res.data || []
       },
       (err) => {
         this.gs.errorToaster(err?.error?.msg || "Failed to load categories")
@@ -300,7 +300,7 @@ export class AddProductComponent implements OnInit {
   getItem() {
     this.httpService.get(APIURLs.getProductByIdAPI + "/" + this.routerId).subscribe(
       (res: any) => {
-        this.formObj = res.data
+        this.formObj = res.data?.data || res.data || []
         this.getSubCat(this.formObj.cat_id)
         this.isSpinner = false
       },
@@ -611,7 +611,7 @@ export class AddProductComponent implements OnInit {
 
     this.httpService.post(APIURLs.subCatByMaincatAPI, { id: id }).subscribe(
       (res: any) => {
-        this.sub_cat = res.data
+        this.sub_cat = res.data?.data || res.data || []
       },
       (err) => {
         this.gs.errorToaster(err?.error?.msg || "Failed to load subcategories")

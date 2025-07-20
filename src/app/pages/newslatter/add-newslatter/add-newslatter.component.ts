@@ -67,7 +67,7 @@ export class AddNewslatterComponent implements OnInit {
 
   getItem() {
     this.httpService.get(APIURLs.getnewsLetterByIdAPI + "/" + this.routerId).subscribe((res: any) => {
-      this.formObj = res.data;
+      this.formObj = res.data?.data || res.data || []
     }, (err) => {
       this.gs.errorToaster(err?.error?.msg || "something went wrong !!");
     })

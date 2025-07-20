@@ -26,7 +26,7 @@ export class SubCategoryComponent implements OnInit {
 
   getAllCategory() {
     this.httpService.get(APIURLs.subCatListAPI).subscribe((res: any) => {
-      this.allData = res.data;
+      this.allData = res.data?.data || res.data || []
       this.gs.gridDataCount = this.allData.length;
     },(err) => {
       this.gs.errorToaster(err?.error?.msg || "something went wrong !!");

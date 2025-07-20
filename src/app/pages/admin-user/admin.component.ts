@@ -22,7 +22,7 @@ export class AdminComponent implements OnInit {
     this.api1.size("/get-all-size", "").subscribe((res: any) => {
       console.log("res>>", res);
       if (res && res.status) {
-        this.allData = res.data;
+        this.allData = res.data?.data || res.data || []
         this.gs.gridDataCount = this.allData.length;
       } else {
         this.gs.errorToaster(res.message);

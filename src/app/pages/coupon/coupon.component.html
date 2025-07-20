@@ -1,73 +1,127 @@
-<div class="pagetitle">
-  <h1>Coupon List</h1>
-  <!-- <nav>
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-      <li class="breadcrumb-item">Tables</li>
-      <li class="breadcrumb-item active">General</li>
-    </ol>
-  </nav> -->
-</div><!-- End Page Title -->
-
-<section class="section py-0">
+<div class="container-fluid">
   <div class="row">
-    <div class="col-md-4 mb-4 align-self-center">
-      <input type="text" placeholder="Search" class="form-control" [(ngModel)]="searchText" name="searchText"
-        (keyup)="gs.getDataCount(allData, searchText)">
-    </div>
-
-    <div class="col-md-2 mb-4 align-self-center">
-      Total Record : {{gs.gridDataCount}}
-    </div>
-
-    <div class="col-md-6 mb-4 text-end">
-      <button type="button" class="btn btn-primary rounded-pill" [routerLink]="['/coupon/New/Add']"
-        routerLinkActive="router-link-active">+ Add</button>
-    </div>
-
-    <div class="col-lg-12">
+    <div class="col-12">
       <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="card-title">Coupon List</h4>
+          <a [routerLink]="['/coupon/New/Add']" class="btn btn-primary">
+            <i class="fa fa-plus"></i> Add New Coupon
+          </a>
+        </div>
         <div class="card-body">
-          <h5 class="card-title">Coupon</h5>
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Code</th>
-                <th scope="col">Discount</th>
-                <th scope="col">Start Date</th>
-                <th scope="col">End Date</th>
-                <th scope="col">Status</th>
-                <th scope="col">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <ng-container
-                *ngFor="let item of allData | filter: searchText | paginate: { itemsPerPage: 10, currentPage: p }; index as k">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <input 
+                type="text" 
+                class="form-control" 
+                placeholder="Search coupons..." 
+                [(ngModel)]="searchText">
+            </div>
+            <div class="col-md-6">
+              <div class="text-right">
+                <small class="text-muted">Total Records: {{gs.gridDataCount}}</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+              <thead>
                 <tr>
-                  <th scope="row">{{k+1}}</th>
-                  <td>{{item.coupon_code}}</td>
-                  <td>{{item.discount_amount}}</td>
-                  <td>{{item.start_date | date:'longDate'}}</td>
-                  <td>{{item.end_date | date:'longDate'}}</td>
-                  <td>{{item.status}}</td>
-                  <td style="font-size : 1.5rem;">
-                    <i [routerLink]="['/coupon', item._id , 'View']" routerLinkActive="router-link-active" title="View"
-                      class="pointer bi bi-eye-fill me-2"></i>
-                    <i [routerLink]="['/coupon', item._id , 'Edit']" title="Edit"
-                      class="pointer bi bi-pencil-fill me-2"></i>
-                    <i (click)="deleteSize(item._id, k)" title="Delete" class="pointer bi bi-trash-fill"></i>
+                  <th>Sr. No.</th>
+                  <th>Coupon Code</th>
+                  <th>Discount</th>
+                  <th>Type</th>
+                  <th>Min Order</th>
+                  <th>Usage</th>
+                  <th>Valid Period</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of allData | paginate: { itemsPerPage: 10, currentPage: p }; let i = index">
+                  <td>{{ (p - 1) * 10 + i + 1 }}</td>
+                  <td>
+                    <strong>{{ item.coupon_code }}</strong>
+                    <br>
+                    <small class="text-muted" *ngIf="item.description">{{ item.description }}</small>
+                  </td>
+                  <td>
+                    <span *ngIf="item.discount_type === 'percentage'">
+                      {{ item.discount_amount }}%
+                    </span>
+                    <span *ngIf="item.discount_type === 'fixed'">
+                      ₹{{ item.discount_amount }}
+                    </span>
+                    <br>
+                    <small class="text-muted" *ngIf="item.max_discount_amount">
+                      Max: ₹{{ item.max_discount_amount }}
+                    </small>
+                  </td>
+                  <td>
+                    <span class="badge" 
+                          [class.badge-info]="item.discount_type === 'percentage'"
+                          [class.badge-success]="item.discount_type === 'fixed'">
+                      {{ item.discount_type | titlecase }}
+                    </span>
+                  </td>
+                  <td>₹{{ item.min_order_amount || 0 }}</td>
+                  <td>
+                    <span *ngIf="item.usage_limit">
+                      {{ item.used_count || 0 }} / {{ item.usage_limit }}
+                    </span>
+                    <span *ngIf="!item.usage_limit">
+                      {{ item.used_count || 0 }} / Unlimited
+                    </span>
+                  </td>
+                  <td>
+                    <small>
+                      {{ item.start_date | date:'dd/MM/yyyy' }} - 
+                      {{ item.end_date | date:'dd/MM/yyyy' }}
+                    </small>
+                  </td>
+                  <td>
+                    <span class="badge" 
+                          [class.badge-success]="item.status === 'Active'"
+                          [class.badge-danger]="item.status === 'Expired'"
+                          [class.badge-warning]="!item.is_active">
+                      <span *ngIf="!item.is_active">Inactive</span>
+                      <span *ngIf="item.is_active">{{ item.status }}</span>
+                    </span>
+                  </td>
+                  <td>
+                    <div class="btn-group" role="group">
+                      <a [routerLink]="['/coupon', item._id , 'View']" 
+                         class="btn btn-sm btn-info" 
+                         title="View">
+                        <i class="fa fa-eye"></i>
+                      </a>
+                      <a [routerLink]="['/coupon', item._id , 'Edit']" 
+                         class="btn btn-sm btn-warning" 
+                         title="Edit">
+                        <i class="fa fa-edit"></i>
+                      </a>
+                      <button class="btn btn-sm btn-danger" 
+                              (click)="deleteSize(item._id, i)" 
+                              title="Delete">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </div>
                   </td>
                 </tr>
-              </ng-container>
-            </tbody>
-          </table>
-          <br>
-          <pagination-controls (pageChange)="p= $event"></pagination-controls>
+                <tr *ngIf="allData.length === 0">
+                  <td colspan="9" class="text-center">No coupons found</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="d-flex justify-content-center" *ngIf="allData.length > 10">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+          </div>
         </div>
       </div>
     </div>
-
-
   </div>
-</section>
+</div>

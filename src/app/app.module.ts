@@ -63,7 +63,6 @@ import { AddBannerComponent } from './pages/blogs/banners/add-banner/add-banner.
     AddProductComponent,
     UserComponent,
     AddUserComponent,
-
     SizeComponent,
     AddSizeComponent,
     MatComponent,
@@ -87,7 +86,6 @@ import { AddBannerComponent } from './pages/blogs/banners/add-banner/add-banner.
     AppRoutingModule,
     HttpClientModule,
     NgSelectModule,
-    // NgMultiSelectDropDownModule.forRoot(),
     BrowserAnimationsModule,
     Ng2SearchPipeModule,
     NgxPaginationModule,

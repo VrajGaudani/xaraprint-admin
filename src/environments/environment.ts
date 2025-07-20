@@ -4,10 +4,9 @@
 
 export const environment = {
   production: false,
-  baseUrl: "http://localhost:3000/api/v1/",
-  // baseUrl: "https://api.xaraprint.com/v1/",
-  imgUrl: "http://localhost:3000/uploads/"
-};
+  baseUrl: "http://localhost:3000/v1/",
+  imgUrl: "http://localhost:3000/uploads/",
+}
 
 /*
  * For easier debugging in development mode, you can import the following file

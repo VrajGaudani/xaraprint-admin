@@ -26,7 +26,7 @@ export class CouponComponent implements OnInit {
 
   getAll() {
     this.httpService.get(APIURLs.getAllCouponAPI).subscribe((res: any) => {
-      this.allData = res.data;
+      this.allData = res.data?.data || res.data || []
       for (let i in this.allData) {
         if (this.allData[i].end_date > new Date().toISOString()) {
           this.allData[i].status = "Active"

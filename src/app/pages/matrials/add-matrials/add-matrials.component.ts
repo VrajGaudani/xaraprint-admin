@@ -56,7 +56,7 @@ export class AddMatComponent implements OnInit {
 
     this.api1.matrials("/get-mat", { _id: this.routerId }).subscribe((res: any) => {
       if (res && res.status) {
-        this.formObj = res.data;
+        this.formObj = res.data?.data || res.data || []
       } else {
         this.gs.errorToaster(res.message);
       }
