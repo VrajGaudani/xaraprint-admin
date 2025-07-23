@@ -1,8 +1,9 @@
 import { environment } from "./environment.prod";
 
-
 export const APIURLs = {
+  // auth
   loginAPI: environment.baseUrl + 'admin/auth/login',
+
   // user
   getAllUserAPI: environment.baseUrl + 'admin/user/getAll',
   getUserByIdAPI: environment.baseUrl + 'admin/user/getById',
@@ -59,6 +60,7 @@ export const APIURLs = {
   UpdateblogAPI: environment.baseUrl + 'blog/update',
   DeleteblogAPI: environment.baseUrl + 'blog/delete',
 
+  // product filters
   getAllBestSellerAPI: environment.baseUrl + 'admin/product/getAll-bestselling',
   addToBestSellerAPI: environment.baseUrl + 'admin/product/add-bestselling',
   removeToBestSellerAPI: environment.baseUrl + 'admin/product/remove-bestselling',
@@ -74,4 +76,62 @@ export const APIURLs = {
   getAllBannersAPI: environment.baseUrl + 'admin/banner/getAll',
   addBannersAPI: environment.baseUrl + 'admin/banner/add',
   deleteBannersAPI: environment.baseUrl + 'admin/banner/delete',
-}
+
+  adminLogoutAPI: environment.baseUrl + 'admin/auth/logout',
+  adminProfileAPI: environment.baseUrl + 'admin/profile/get',
+  updateAdminProfileAPI: environment.baseUrl + 'admin/profile/update',
+
+  updateOrderStatusAPI: environment.baseUrl + 'admin/order/update-status',
+  getOrderStatsAPI: environment.baseUrl + 'admin/order/stats',
+
+  getAllTransactionAPI: environment.baseUrl + 'admin/order/transactions/all',
+  getAllInvoiceAPI: environment.baseUrl + 'admin/order/invoices/all',
+
+  getAllCatAPI: environment.baseUrl + 'admin/category/getAll',
+  getCatByIdAPI: environment.baseUrl + 'admin/category/getById',
+  addCatAPI: environment.baseUrl + 'admin/category/add',
+  updateCatAPI: environment.baseUrl + 'admin/category/update',
+  deleteCatAPI: environment.baseUrl + 'admin/category/delete',
+  uploadCategoryImageAPI: environment.baseUrl + 'admin/category/upload-image',
+
+  getAllSubCatAPI: environment.baseUrl + 'admin/sub-category/getAll',
+  getSubCatByIdAPI: environment.baseUrl + 'admin/sub-category/getById',
+  addSubCatAPI: environment.baseUrl + 'admin/sub-category/add',
+  updateSubCatAPI: environment.baseUrl + 'admin/sub-category/update',
+  deleteSubCatAPI: environment.baseUrl + 'admin/sub-category/delete',
+
+  addUserAPI: environment.baseUrl + 'admin/user/add',
+
+  getBannerByIdAPI: environment.baseUrl + 'admin/banner/getById',
+  updateBannerAPI: environment.baseUrl + 'admin/banner/update',
+  uploadBannerImageAPI: environment.baseUrl + 'admin/banner/upload-image',
+
+  getAllBlogAPI: environment.baseUrl + 'admin/blog/getAll',
+  getBlogByIdAPI: environment.baseUrl + 'admin/blog/getById',
+  addBlogAPI: environment.baseUrl + 'admin/blog/add',
+  updateBlogAPI: environment.baseUrl + 'admin/blog/update',
+  deleteBlogAPI: environment.baseUrl + 'admin/blog/delete',
+  uploadBlogImageAPI: environment.baseUrl + 'admin/blog/upload-image',
+
+  getAllNewsLetterAPI: environment.baseUrl + 'admin/newsletter/getAll',
+  getNewsLetterByIdAPI: environment.baseUrl + 'admin/newsletter/getById',
+  addNewsLetterAPI: environment.baseUrl + 'admin/newsletter/add',
+  updateNewsLetterAPI: environment.baseUrl + 'admin/newsletter/update',
+  deleteNewsLetterAPI: environment.baseUrl + 'admin/newsletter/delete',
+
+  getAllSizeAPI: environment.baseUrl + 'admin/size/getAll',
+  getSizeByIdAPI: environment.baseUrl + 'admin/size/getById',
+  addSizeAPI: environment.baseUrl + 'admin/size/add',
+  updateSizeAPI: environment.baseUrl + 'admin/size/update',
+  deleteSizeAPI: environment.baseUrl + 'admin/size/delete',
+
+  getAllMaterialAPI: environment.baseUrl + 'admin/material/getAll',
+  getMaterialByIdAPI: environment.baseUrl + 'admin/material/getById',
+  addMaterialAPI: environment.baseUrl + 'admin/material/add',
+  updateMaterialAPI: environment.baseUrl + 'admin/material/update',
+  deleteMaterialAPI: environment.baseUrl + 'admin/material/delete',
+
+  uploadFileAPI: environment.baseUrl + 'admin/upload/file',
+  uploadImageAPI: environment.baseUrl + 'admin/upload/image',
+  uploadMultipleImagesAPI: environment.baseUrl + 'admin/upload/multiple-images',
+};

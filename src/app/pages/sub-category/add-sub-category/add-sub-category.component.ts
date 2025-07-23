@@ -34,7 +34,7 @@ export class AddSubCategoryComponent implements OnInit {
   ) {
 
     this.httpService.get(APIURLs.mainCatListAPI).subscribe((res: any) => {
-      this.allCategory = res.data;
+      this.allCategory = res.data?.data || res.data || []
     },(err) => {
       this.gs.errorToaster(err?.error?.msg || "something went wrong !!");
     })
@@ -65,7 +65,7 @@ export class AddSubCategoryComponent implements OnInit {
 
   getItem() {
     this.httpService.get(APIURLs.subCatByIdAPI + '/' + this.routerId).subscribe((res: any) => {
-      this.formObj = res.data;
+      this.formObj = res.data?.data || res.data || []
     },(err) => {
       this.gs.errorToaster(err?.error?.msg || "something went wrong !!");
     })
@@ -82,7 +82,7 @@ export class AddSubCategoryComponent implements OnInit {
   }
 
   update() {
-    this.httpService.put(APIURLs.subCatUpdateAPI,this.formObj).subscribe((res: any) => {
+    this.httpService.put(APIURLs.updateSubCatAPI,this.formObj).subscribe((res: any) => {
       this.router.navigate(['/sub-category-list'])
         this.gs.successToaster(res?.msg);
     },(err) => {

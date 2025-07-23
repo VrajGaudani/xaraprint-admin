@@ -73,7 +73,7 @@ export class AddUserComponent implements OnInit {
 
   getItem() {
     this.httpService.get(APIURLs.getUserByIdAPI + `/${this.routerId}`).subscribe((res: any) => {
-      this.formObj = res.data;
+      this.formObj = res.data?.data || res.data || []
     }, (err) => {
       this.gs.errorToaster(err?.error?.message || "something went wrong !!");
     })

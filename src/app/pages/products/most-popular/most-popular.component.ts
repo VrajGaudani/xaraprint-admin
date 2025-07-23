@@ -24,7 +24,7 @@ export class MostPopularComponent {
 
   getAllMostPopular(){
     this.httpService.get(APIURLs.getAllMostPopularAPI).subscribe((res: any) => {
-      this.allData = res.data;
+      this.allData = res.data?.data || res.data || []
       this.gs.gridDataCount = this.allData.length;
     },(err) => {
       this.gs.errorToaster(err?.error?.msg || "something went wrong !!");

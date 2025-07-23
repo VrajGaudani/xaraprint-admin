@@ -53,7 +53,7 @@ export class AddAdminComponent implements OnInit {
 
     this.api1.size("/get-size", { _id: this.routerId }).subscribe((res: any) => {
       if (res && res.status) {
-        this.formObj = res.data;
+        this.formObj = res.data?.data || res.data || []
       } else {
         this.gs.errorToaster(res.message);
       }

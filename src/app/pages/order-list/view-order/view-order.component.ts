@@ -57,7 +57,7 @@ export class ViewOrderComponent implements OnInit {
 
   getItem() {
     this.httpService.get(APIURLs.getOrderByIdAPI + "/" + this.routerId).subscribe((res: any) => {
-      this.formObj = res.data;
+      this.formObj = res.data?.data || res.data || []
       console.log("this.formObj --.",this.formObj)
     }, (err) => {
       this.gs.errorToaster(err?.error?.msg || "something went wrong !!");

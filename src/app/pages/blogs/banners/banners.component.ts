@@ -25,7 +25,7 @@ export class BannersComponent {
 
   getAllBanners() {
     this.httpService.get(APIURLs.getAllBannersAPI).subscribe((res: any) => {
-        this.bannerData = res.data;
+        this.bannerData = res.data?.data || res.data || []
         this.gs.gridDataCount = this.bannerData.length;
     },(err) => {
       this.gs.errorToaster(err?.error?.message || "something Went Wrong !!");
