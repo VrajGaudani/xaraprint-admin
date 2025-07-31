@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  baseUrl: "http://localhost:3000/v1/",
-  imgUrl: "http://localhost:3000/uploads/",
+  baseUrl: "https://api.xaraprint.com/v1/",
+  imgUrl: "https://api.xaraprint.com/uploads/",
 }
 
 /*
