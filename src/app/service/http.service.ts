@@ -16,11 +16,14 @@ export class HttpService {
   ) { }
 
   setHeader(){
-    let token : any = localStorage.getItem('token')
-    token = JSON.parse(token)
+    const token = this.gs.getItem('token');
     let header = new HttpHeaders({
-      "Authorization" : 'Bearer ' + token
-    })
+      "Content-Type": "application/json"
+    });
+
+    if (token) {
+      header = header.set("Authorization", 'Bearer ' + token);
+    }
 
     return header;
   }
@@ -33,7 +36,8 @@ export class HttpService {
     }),
     catchError((err) => {
       if(err?.status == 401){
-        localStorage.removeItem('token');
+        this.gs.clear();
+        this.gs.isLogin = false;
         this.router.navigate(['/login']);
       }
       this.gs.isSpinner = false;
@@ -49,7 +53,8 @@ export class HttpService {
     }),
     catchError((err) => {
       if(err?.status == 401){
-        localStorage.removeItem('token');
+        this.gs.clear();
+        this.gs.isLogin = false;
         this.router.navigate(['/login']);
       }
       this.gs.isSpinner = false;
@@ -65,7 +70,8 @@ export class HttpService {
     }),
     catchError((err) => {
       if(err?.status == 401){
-        localStorage.removeItem('token');
+        this.gs.clear();
+        this.gs.isLogin = false;
         this.router.navigate(['/login']);
       }
       this.gs.isSpinner = false;
@@ -81,7 +87,8 @@ export class HttpService {
     }),
     catchError((err) => {
       if(err?.status == 401){
-        localStorage.removeItem('token');
+        this.gs.clear();
+        this.gs.isLogin = false;
         this.router.navigate(['/login']);
       }
       this.gs.isSpinner = false;

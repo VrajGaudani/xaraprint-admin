@@ -37,12 +37,19 @@ export class LoginComponent implements OnInit {
     this.isSubmitted = true;
     if(this.loginForm.valid){
       this.httpService.post(APIURLs.loginAPI,this.loginForm.value).subscribe((res: any) => {
-        localStorage.setItem('token', JSON.stringify(res?.data?.token));
-        this.router.navigate(['/dashboard']);
-        this.gs.successToaster(res?.msg);
-        this.isSubmitted = false;
+        if (res && res.status) {
+          // Store token properly
+          this.gs.setItem('token', res?.data?.token);
+          this.gs.isLogin = true;
+          this.router.navigate(['/dashboard']);
+          this.gs.successToaster(res?.msg || "Login successful!");
+          this.isSubmitted = false;
+        } else {
+          this.gs.errorToaster(res?.msg || "Login failed. Please try again.");
+        }
       },(err) => {
-        this.gs.errorToaster(err?.error?.msg || "something went wrong !!");
+        this.gs.errorToaster(err?.error?.msg || "Something went wrong!");
+        this.isSubmitted = false;
       })
     }
   }

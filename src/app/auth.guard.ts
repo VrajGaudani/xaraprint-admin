@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
+import { GlobleService } from './service/globle.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivateChild {
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private gs: GlobleService
+  ) { }
 
   canActivateChild(): boolean {
     let isAuthenticated = this.checkIfUserIsLoggedIn();
@@ -17,18 +21,12 @@ export class AuthGuard implements CanActivateChild {
     return isAuthenticated;
   }
 
-
   private checkIfUserIsLoggedIn(): boolean {
-    if(localStorage.getItem('token')){
-      let token : any = localStorage.getItem('token')
-      token = JSON.parse(token)
-      if (token) {
-        return true
-      } else {
-        return false
-      }
-    }else{
-      return false
+    const token = this.gs.getItem('token');
+    if (token) {
+      return true;
+    } else {
+      return false;
     }
   }
 }
