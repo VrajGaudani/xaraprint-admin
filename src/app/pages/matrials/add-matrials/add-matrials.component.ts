@@ -105,12 +105,14 @@ export class AddMatComponent implements OnInit {
         this.gs.errorToaster('File size is too Large, Maximum 5 mb Allowed')
       } else {
         this.file.saveimage(file).subscribe((res: any) => {
-          if (res && res.status) {
+          if (res && res.status === 200) {
             console.log("><", res)
-            this.formObj.filename = res.data[0].filename
+            this.formObj.filename = res.data.url
           } else {
-            this.gs.errorToaster(res.message);
+            this.gs.errorToaster(res.msg || res.message || 'Upload failed');
           }
+        }, (error) => {
+          this.gs.errorToaster(error?.error?.msg || 'Upload failed');
         });
       }
 

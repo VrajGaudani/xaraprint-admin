@@ -412,8 +412,14 @@
                 <h6 class="section-title">
                   <i class="bi bi-gear me-2"></i>Additional Options
                 </h6>
-                <p class="section-description">Configure additional product options and customizations</p>
+                <p class="section-description">Add custom options and details for your product</p>
               </div>
+
+
+
+
+
+
 
               <!-- Custom Size Option -->
               <div class="custom-size-section mb-4">
@@ -451,11 +457,29 @@
                   </button>
                 </div>
 
+                <!-- Help Text -->
+                <div class="alert alert-info mb-3">
+                  <i class="bi bi-info-circle me-2"></i>
+                  <strong>Tip:</strong> Each option should have a title (e.g., "Material Type") and details (e.g., "Vinyl", "Canvas", "Banner"). 
+                  All fields including images are required for each detail.
+                </div>
+
                 <!-- Options List -->
                 <div class="options-list">
                   <div class="option-card" *ngFor="let option of formObj.otherObj; let i = index">
-                    <div class="option-header">
-                      <h6 class="option-title">Option {{i + 1}}</h6>
+                    <div class="option-header d-flex justify-content-between align-items-center p-3 border-bottom"
+                         [class.border-success]="isOptionValid(i)"
+                         [class.border-warning]="option.main_title?.trim() && (!isOptionValid(i))"
+                         [class.border-danger]="!option.main_title?.trim()">
+                      <div class="d-flex align-items-center gap-2">
+                        <h6 class="option-title mb-0">Option {{i + 1}}</h6>
+                        <span class="badge" 
+                              [class.bg-success]="isOptionValid(i)"
+                              [class.bg-warning]="option.main_title?.trim() && (!isOptionValid(i))"
+                              [class.bg-danger]="!option.main_title?.trim()">
+                          {{isOptionValid(i) ? 'Complete' : (option.main_title?.trim() ? 'Incomplete' : 'Missing Title')}}
+                        </span>
+                      </div>
                       <button type="button" 
                               class="btn btn-outline-danger btn-sm" 
                               *ngIf="formObj.otherObj.length > 1 && !isDisable"
@@ -464,14 +488,18 @@
                       </button>
                     </div>
 
-                    <div class="option-content">
+                    <div class="option-content p-3">
                       <div class="form-group mb-3">
                         <label class="form-label required">Option Title</label>
                         <input type="text" 
                                class="form-control" 
+                               [class.is-valid]="option.main_title?.trim()"
+                               [class.is-invalid]="!option.main_title?.trim()"
                                [(ngModel)]="option.main_title"
                                [name]="'option_title_' + i"
-                               placeholder="e.g., Backboard, Waterproof, etc.">
+                               placeholder="e.g., Material Type, Size Options, etc.">
+                        <div class="invalid-feedback">Option title is required</div>
+                        <div class="valid-feedback">Looks good!</div>
                       </div>
 
                       <!-- Option Details -->
@@ -487,45 +515,145 @@
                         </div>
 
                         <div class="detail-item" *ngFor="let detail of option.details; let j = index">
-                          <div class="detail-header">
-                            <span class="detail-number">Detail {{j + 1}}</span>
-                            <button type="button" 
-                                    class="btn btn-outline-danger btn-sm" 
-                                    *ngIf="option.details.length > 1 && !isDisable"
-                                    (click)="removeDetails(i, j)">
-                              <i class="bi bi-trash"></i>
-                            </button>
+                          <div class="detail-header d-flex justify-content-between align-items-center mb-2 p-3 rounded"
+                               [class.bg-success]="isOptionDetailValid(i, j)"
+                               [class.bg-warning]="detail.name?.trim() || detail.filename || (detail.price && detail.price !== '0')"
+                               [class.bg-light]="!detail.name?.trim() && !detail.filename && (!detail.price || detail.price === '0')">
+                            <div class="d-flex align-items-center">
+                              <span class="detail-number fw-bold me-2">
+                                <i class="bi bi-list-ul me-1"></i>Detail {{j + 1}}
+                              </span>
+                              <span class="badge rounded-pill" 
+                                    [class.bg-success]="isOptionDetailValid(i, j)"
+                                    [class.bg-warning]="detail.name?.trim() || detail.filename || (detail.price && detail.price !== '0')"
+                                    [class.bg-danger]="!detail.name?.trim() && !detail.filename && (!detail.price || detail.price === '0')">
+                                <i class="bi" 
+                                   [class.bi-check-circle]="isOptionDetailValid(i, j)"
+                                   [class.bi-exclamation-triangle]="detail.name?.trim() || detail.filename || (detail.price && detail.price !== '0')"
+                                   [class.bi-x-circle]="!detail.name?.trim() && !detail.filename && (!detail.price || detail.price === '0')"></i>
+                                {{isOptionDetailValid(i, j) ? 'Complete' : 'Incomplete'}}
+                              </span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                              <!-- Progress indicator for this detail -->
+                              <div class="detail-progress me-2">
+                                <div class="progress" style="width: 60px; height: 6px;">
+                                  <div class="progress-bar" 
+                                       [class.bg-success]="isOptionDetailValid(i, j)"
+                                       [class.bg-warning]="detail.name?.trim() || detail.filename || (detail.price && detail.price !== '0')"
+                                       [class.bg-danger]="!detail.name?.trim() && !detail.filename && (!detail.price || detail.price === '0')"
+                                       [style.width.%]="getDetailProgress(i, j)">
+                                  </div>
+                                </div>
+                                <small class="text-muted">{{getDetailProgress(i, j)}}%</small>
+                              </div>
+                              
+                              <button type="button" 
+                                      class="btn btn-outline-danger btn-sm" 
+                                      *ngIf="option.details.length > 1 && !isDisable"
+                                      (click)="removeDetails(i, j)"
+                                      title="Remove this detail">
+                                <i class="bi bi-trash"></i>
+                              </button>
+                            </div>
                           </div>
 
                           <div class="row">
                             <div class="col-md-4">
-                              <label class="form-label">Name</label>
+                              <label class="form-label required">Name</label>
                               <input type="text" 
                                      class="form-control" 
+                                     [class.is-valid]="detail.name?.trim()"
+                                     [class.is-invalid]="!detail.name?.trim()"
                                      [(ngModel)]="detail.name"
                                      [name]="'detail_name_' + i + '_' + j"
-                                     placeholder="Detail name">
+                                     placeholder="e.g., Vinyl, Canvas, Banner">
+                              <div class="invalid-feedback">Detail name is required</div>
+                              <div class="valid-feedback">Looks good!</div>
                             </div>
                             <div class="col-md-3">
-                              <label class="form-label">Price ($)</label>
+                              <label class="form-label required">Price ($)</label>
                               <input type="number" 
                                      class="form-control" 
+                                     [class.is-valid]="detail.price && detail.price !== '0'"
+                                     [class.is-invalid]="!detail.price || detail.price === '0'"
                                      [(ngModel)]="detail.price"
                                      [name]="'detail_price_' + i + '_' + j"
                                      min="0" 
                                      step="0.01"
                                      placeholder="0.00">
+                              <div class="invalid-feedback">Price is required</div>
+                              <div class="valid-feedback">Looks good!</div>
                             </div>
                             <div class="col-md-5">
-                              <label class="form-label">Image</label>
-                              <input type="file" 
-                                     class="form-control" 
-                                     accept=".png,.jpg,.jpeg"
-                                     (change)="fileUpload($event, i, j)">
-                              <img *ngIf="detail.filename" 
-                                   [src]="detail.filename" 
-                                   class="detail-image mt-2"
-                                   (click)="imageViewModal(detail.filename)">
+                              <label class="form-label required">
+                                <i class="bi bi-image me-1"></i>Image
+                                <span class="text-danger fw-bold">*</span>
+                                <i class="bi bi-question-circle ms-1 text-info" 
+                                   data-bs-toggle="tooltip" 
+                                   data-bs-placement="top"
+                                   title="Images are required for all option details to provide customers with visual information about each customization choice"></i>
+                              </label>
+                              <div class="image-upload-container">
+                                <input type="file" 
+                                       class="form-control" 
+                                       accept=".png,.jpg,.jpeg,.webp"
+                                       [class.is-valid]="detail.filename"
+                                       [class.is-invalid]="!detail.filename"
+                                       (change)="fileUpload($event, i, j)"
+                                       [disabled]="isDisable">
+                                <div class="invalid-feedback">
+                                  <i class="bi bi-exclamation-triangle me-1"></i>
+                                  <strong>Image is required</strong> for this detail
+                                </div>
+                                <div class="valid-feedback">
+                                  <i class="bi bi-check-circle me-1"></i>
+                                  <strong>Image uploaded successfully!</strong>
+                                </div>
+                                
+                                <!-- Image Preview -->
+                                <div class="image-preview mt-2" *ngIf="detail.filename">
+                                  <div class="image-container position-relative">
+                                    <img [src]="detail.filename" 
+                                         class="detail-image img-thumbnail"
+                                         style="max-width: 100px; max-height: 100px; cursor: pointer; border: 2px solid #28a745;"
+                                         (click)="imageViewModal(detail.filename)"
+                                         alt="Detail image">
+                                    <div class="image-overlay">
+                                      <i class="bi bi-eye text-white"></i>
+                                    </div>
+                                  </div>
+                                  <div class="mt-1">
+                                    <small class="text-success fw-bold">
+                                      <i class="bi bi-check-circle me-1"></i>Image uploaded successfully
+                                    </small>
+                                  </div>
+                                </div>
+                                
+                                <!-- Upload Help -->
+                                <div class="form-text" *ngIf="!detail.filename">
+                                  <div class="upload-help-box p-2 bg-light rounded">
+                                    <i class="bi bi-info-circle me-1 text-primary"></i>
+                                    <strong>Image Requirements:</strong>
+                                    <ul class="mb-0 mt-1 small">
+                                      <li>Supported formats: JPG, PNG, WebP</li>
+                                      <li>Maximum file size: 5MB</li>
+                                      <li>Image is <strong class="text-danger">REQUIRED</strong> for this detail</li>
+                                    </ul>
+                                  </div>
+                                </div>
+                                
+                                <!-- Upload Progress Indicator -->
+                                <div class="upload-progress mt-2" *ngIf="gs.isSpinner">
+                                  <div class="progress">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                         role="progressbar" 
+                                         style="width: 100%">
+                                      Uploading image...
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>

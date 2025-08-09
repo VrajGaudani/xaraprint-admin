@@ -95,4 +95,29 @@ export class HttpService {
       return throwError(err)
     }))
   }
+
+  // File upload method - doesn't set Content-Type to allow browser to set multipart boundary
+  uploadFile(url: string, formData: FormData) {
+    this.gs.isSpinner = true;
+    const token = this.gs.getItem('token');
+    let headers = new HttpHeaders();
+    
+    if (token) {
+      headers = headers.set("Authorization", 'Bearer ' + token);
+    }
+    
+    return this.http.post(url, formData, { headers }).pipe(map((res) => {
+      this.gs.isSpinner = false;
+      return res
+    }),
+    catchError((err) => {
+      if(err?.status == 401){
+        this.gs.clear();
+        this.gs.isLogin = false;
+        this.router.navigate(['/login']);
+      }
+      this.gs.isSpinner = false;
+      return throwError(err)
+    }))
+  }
 }

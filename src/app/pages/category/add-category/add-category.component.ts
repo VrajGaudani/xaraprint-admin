@@ -72,7 +72,7 @@ export class AddCategoryComponent implements OnInit {
     const formData: any = new FormData();
     formData.append('file', this.selectedFile);
     if (this.selectedFile) {
-      this.httpService.post(APIURLs.categoryImageUploadAPI,formData).subscribe(
+      this.httpService.uploadFile(APIURLs.categoryImageUploadAPI,formData).subscribe(
         (res:any) => {
           this.formObj.image = res?.data?.url
           this.gs.successToaster(res?.msg || "something went wrong !!");

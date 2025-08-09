@@ -105,7 +105,7 @@ export class AddBlogComponent {
     const formData: any = new FormData();
     formData.append('file', this.selectedFile);
     if (this.selectedFile) {
-      this.httpService.post(APIURLs.blogImageUploadAPI,formData).subscribe(
+      this.httpService.uploadFile(APIURLs.blogImageUploadAPI,formData).subscribe(
         (res:any) => {
           this.formObj.image = res?.data?.url
           this.gs.successToaster(res?.msg || "something went wrong !!");

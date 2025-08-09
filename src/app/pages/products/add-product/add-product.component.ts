@@ -178,8 +178,8 @@ export class AddProductComponent implements OnInit {
         return this.validateImages()
       case 4: // Sizes & Bulk
         return this.validateSizesAndBulk()
-      case 5: // Additional Options
-        return this.validateAdditionalOptions()
+      case 5: // Additional Options - Use enhanced validation
+        return this.validateAdditionalOptionsEnhanced()
       default:
         return true
     }
@@ -251,37 +251,277 @@ export class AddProductComponent implements OnInit {
     return true
   }
 
+  // Enhanced validation with field-level errors and better user feedback
   validateAdditionalOptions(): boolean {
+    let isValid = true;
+    let errorMessages: string[] = [];
+    
     if (!this.formObj.otherObj || this.formObj.otherObj.length === 0) {
-      this.gs.errorToaster("At least one additional option is required")
-      return false
+      this.gs.errorToaster("At least one additional option is required");
+      return false;
     }
 
     for (let i = 0; i < this.formObj.otherObj.length; i++) {
-      const other = this.formObj.otherObj[i]
+      const other = this.formObj.otherObj[i];
+      
+      // Validate option title
       if (!other.main_title?.trim()) {
-        this.gs.errorToaster(`Title is required for Option ${i + 1}`)
-        return false
+        errorMessages.push(`Option ${i + 1}: Title is required`);
+        isValid = false;
+        continue;
       }
 
       if (!other.details || other.details.length === 0) {
-        this.gs.errorToaster(`At least one detail is required for Option ${i + 1}`)
-        return false
+        errorMessages.push(`Option ${i + 1}: At least one detail is required`);
+        isValid = false;
+        continue;
       }
 
       for (let j = 0; j < other.details.length; j++) {
-        const detail = other.details[j]
+        const detail = other.details[j];
+        let detailErrors: string[] = [];
+        
+        // Validate detail name
         if (!detail.name?.trim()) {
-          this.gs.errorToaster(`Name is required for Option ${i + 1}, Detail ${j + 1}`)
-          return false
+          detailErrors.push('Name');
         }
+        
+        // Validate detail image - CRITICAL: Image is required for all details
         if (!detail.filename) {
-          this.gs.errorToaster(`Image is required for Option ${i + 1}, Detail ${j + 1}`)
-          return false
+          detailErrors.push('Image');
+        }
+        
+        // Validate detail price
+        if (!detail.price || detail.price === '' || detail.price === '0') {
+          detailErrors.push('Price');
+        }
+        
+        if (detailErrors.length > 0) {
+          errorMessages.push(`Option ${i + 1}, Detail ${j + 1}: ${detailErrors.join(', ')} required`);
+          isValid = false;
         }
       }
     }
-    return true
+    
+    // Show all validation errors at once for better user experience
+    if (!isValid && errorMessages.length > 0) {
+      const errorSummary = errorMessages.slice(0, 3).join('; '); // Show first 3 errors
+      if (errorMessages.length > 3) {
+        this.gs.errorToaster(`${errorSummary}; and ${errorMessages.length - 3} more issues. Please complete all required fields.`);
+      } else {
+        this.gs.errorToaster(errorSummary);
+      }
+    }
+    
+    return isValid;
+  }
+
+  // Enhanced validation with field-level errors and progress tracking
+  validateAdditionalOptionsWithFieldErrors(): boolean {
+    let isValid = true;
+    let completedOptions = 0;
+    let totalOptions = 0;
+    
+    if (!this.formObj.otherObj || this.formObj.otherObj.length === 0) {
+      this.gs.errorToaster("At least one additional option is required");
+      return false;
+    }
+
+    for (let i = 0; i < this.formObj.otherObj.length; i++) {
+      const other = this.formObj.otherObj[i];
+      totalOptions++;
+      
+      // Validate option title
+      if (!other.main_title?.trim()) {
+        this.gs.errorToaster(`Option ${i + 1}: Title is required`);
+        isValid = false;
+        continue;
+      }
+
+      if (!other.details || other.details.length === 0) {
+        this.gs.errorToaster(`Option ${i + 1}: At least one detail is required`);
+        isValid = false;
+        continue;
+      }
+
+      let optionComplete = true;
+      for (let j = 0; j < other.details.length; j++) {
+        const detail = other.details[j];
+        
+        // Validate detail name
+        if (!detail.name?.trim()) {
+          this.gs.errorToaster(`Option ${i + 1}, Detail ${j + 1}: Name is required`);
+          isValid = false;
+          optionComplete = false;
+        }
+        
+        // Validate detail image - CRITICAL: Image is required for all details
+        if (!detail.filename) {
+          this.gs.errorToaster(`Option ${i + 1}, Detail ${j + 1}: Image is required`);
+          isValid = false;
+          optionComplete = false;
+        }
+        
+        // Validate detail price
+        if (!detail.price || detail.price === '' || detail.price === '0') {
+          this.gs.errorToaster(`Option ${i + 1}, Detail ${j + 1}: Price is required`);
+          isValid = false;
+          optionComplete = false;
+        }
+      }
+      
+      if (optionComplete) {
+        completedOptions++;
+      }
+    }
+    
+    // Show progress information
+    if (completedOptions > 0) {
+      const progressPercentage = Math.round((completedOptions / totalOptions) * 100);
+      if (progressPercentage === 100) {
+        this.gs.successToaster(`All ${totalOptions} options are complete! Ready to proceed.`);
+      } else {
+        this.gs.errorToaster(`${completedOptions} of ${totalOptions} options complete (${progressPercentage}%). Please complete all required fields.`);
+      }
+    }
+    
+    return isValid;
+  }
+
+  // Enhanced validation method that provides better user feedback
+  validateAdditionalOptionsEnhanced(): boolean {
+    let isValid = true;
+    let validationSummary = {
+      totalOptions: 0,
+      completeOptions: 0,
+      incompleteOptions: 0,
+      missingImages: 0,
+      missingNames: 0,
+      missingPrices: 0
+    };
+    
+    if (!this.formObj.otherObj || this.formObj.otherObj.length === 0) {
+      this.gs.errorToaster("At least one additional option is required");
+      return false;
+    }
+
+    validationSummary.totalOptions = this.formObj.otherObj.length;
+
+    for (let i = 0; i < this.formObj.otherObj.length; i++) {
+      const other = this.formObj.otherObj[i];
+      
+      // Validate option title
+      if (!other.main_title?.trim()) {
+        this.gs.errorToaster(`Option ${i + 1}: Title is required`);
+        isValid = false;
+        validationSummary.incompleteOptions++;
+        continue;
+      }
+
+      if (!other.details || other.details.length === 0) {
+        this.gs.errorToaster(`Option ${i + 1}: At least one detail is required`);
+        isValid = false;
+        validationSummary.incompleteOptions++;
+        continue;
+      }
+
+      let optionComplete = true;
+      for (let j = 0; j < other.details.length; j++) {
+        const detail = other.details[j];
+        
+        // Validate detail name
+        if (!detail.name?.trim()) {
+          validationSummary.missingNames++;
+          optionComplete = false;
+        }
+        
+        // Validate detail image - CRITICAL: Image is required for all details
+        if (!detail.filename) {
+          validationSummary.missingImages++;
+          optionComplete = false;
+        }
+        
+        // Validate detail price
+        if (!detail.price || detail.price === '' || detail.price === '0') {
+          validationSummary.missingPrices++;
+          optionComplete = false;
+        }
+      }
+      
+      if (optionComplete) {
+        validationSummary.completeOptions++;
+      } else {
+        validationSummary.incompleteOptions++;
+      }
+    }
+    
+    // Provide comprehensive feedback
+    if (!isValid) {
+      let feedbackMessage = `Validation Summary: ${validationSummary.completeOptions}/${validationSummary.totalOptions} options complete. `;
+      
+      if (validationSummary.missingImages > 0) {
+        feedbackMessage += `${validationSummary.missingImages} images missing. `;
+      }
+      if (validationSummary.missingNames > 0) {
+        feedbackMessage += `${validationSummary.missingNames} names missing. `;
+      }
+      if (validationSummary.missingPrices > 0) {
+        feedbackMessage += `${validationSummary.missingPrices} prices missing. `;
+      }
+      
+      this.gs.errorToaster(feedbackMessage);
+    } else {
+      this.gs.successToaster(`All ${validationSummary.totalOptions} options are complete and ready!`);
+    }
+    
+    return isValid;
+  }
+
+  // Check if a specific option detail is valid
+  isOptionDetailValid(optionIndex: number, detailIndex: number): boolean {
+    const option = this.formObj.otherObj[optionIndex];
+    if (!option || !option.details || !option.details[detailIndex]) {
+      return false;
+    }
+    
+    const detail = option.details[detailIndex];
+    return !!(detail.name?.trim() && detail.filename && detail.price && detail.price !== '0');
+  }
+
+  // Check if a specific option is valid
+  isOptionValid(optionIndex: number): boolean {
+    const option = this.formObj.otherObj[optionIndex];
+    if (!option || !option.main_title?.trim() || !option.details || option.details.length === 0) {
+      return false;
+    }
+    
+    for (let i = 0; i < option.details.length; i++) {
+      if (!this.isOptionDetailValid(optionIndex, i)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // Get validation status for progress indication
+  getOptionsValidationStatus(): { valid: number, total: number, percentage: number } {
+    if (!this.formObj.otherObj || this.formObj.otherObj.length === 0) {
+      return { valid: 0, total: 0, percentage: 0 };
+    }
+    
+    let validOptions = 0;
+    let totalDetails = 0;
+    
+    for (let i = 0; i < this.formObj.otherObj.length; i++) {
+      if (this.isOptionValid(i)) {
+        validOptions++;
+      }
+      totalDetails += this.formObj.otherObj[i].details?.length || 0;
+    }
+    
+    const percentage = totalDetails > 0 ? Math.round((validOptions / this.formObj.otherObj.length) * 100) : 0;
+    
+    return { valid: validOptions, total: this.formObj.otherObj.length, percentage };
   }
 
   clearErrors() {
@@ -301,7 +541,7 @@ export class AddProductComponent implements OnInit {
     this.httpService.get(APIURLs.getProductByIdAPI + "/" + this.routerId).subscribe(
       (res: any) => {
         this.formObj = res.data?.data || res.data || []
-        this.getSubCat(this.formObj.cat_id)
+        // this.getSubCat(this.formObj.cat_id._id)
         this.isSpinner = false
       },
       (err) => {
@@ -366,24 +606,55 @@ export class AddProductComponent implements OnInit {
       .replace(/[^a-z0-9-]/g, "")
   }
 
-  // File upload methods
+  // Enhanced file upload with better validation and user feedback
   fileUpload(event: any, otherIndex: any, detailIndex: any) {
     const file = event.target.files[0]
     if (!file) return
 
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      this.gs.errorToaster('Please select a valid image file (JPG, PNG, or WebP)');
+      event.target.value = ''; // Clear the input
+      return;
+    }
+
+    // Validate file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      this.gs.errorToaster('File size should be less than 5MB');
+      event.target.value = ''; // Clear the input
+      return;
+    }
+
+    // Show loading state
+    this.gs.isSpinner = true;
+    this.gs.successToaster('Uploading image...');
+
     const formData = new FormData()
     formData.append("file", file, file.name)
 
-    this.httpService.post(APIURLs.productImageUploadAPI, formData).subscribe(
+    this.httpService.uploadFile(APIURLs.productImageUploadAPI, formData).subscribe(
       (res: any) => {
-        this.formObj.otherObj[otherIndex].details[detailIndex].filename = res?.data?.urls[0]
-        this.gs.successToaster("Image uploaded successfully")
+        this.gs.isSpinner = false;
+        if (res?.data?.url) {
+          this.formObj.otherObj[otherIndex].details[detailIndex].filename = res.data.url;
+          this.gs.successToaster("Image uploaded successfully");
+        } else {
+          this.gs.errorToaster("Failed to get image URL from response");
+        }
       },
       (err) => {
-        this.gs.errorToaster(err?.error?.msg || "Failed to upload image")
+        this.gs.isSpinner = false;
+        this.gs.errorToaster(err?.error?.msg || "Failed to upload image");
+        event.target.value = ''; // Clear the input on error
       },
     )
   }
+
+
+
+
 
   onFileSelected(event: any) {
     const files = event.target.files
@@ -412,10 +683,10 @@ export class AddProductComponent implements OnInit {
 
     const formData = new FormData()
     this.selectedFiles.forEach((file) => {
-      formData.append("file", file, file.name)
+      formData.append("files", file, file.name)
     })
 
-    this.httpService.post(APIURLs.productImageUploadAPI, formData).subscribe(
+    this.httpService.uploadFile(APIURLs.productMultipleImagesUploadAPI, formData).subscribe(
       (res: any) => {
         this.formObj.product_images = res?.data?.urls
         this.gs.successToaster("Images uploaded successfully")
@@ -423,7 +694,7 @@ export class AddProductComponent implements OnInit {
           this.imagePreviews = []
         }
       },
-      (err) => {
+      (err: any) => {
         this.gs.errorToaster(err?.error?.msg || "Failed to upload images")
       },
     )
@@ -634,5 +905,75 @@ export class AddProductComponent implements OnInit {
       this.gs.errorToaster("Discount must be between 0 and 100")
       event.target.value = ""
     }
+  }
+
+  // Calculate progress percentage for a specific detail
+  getDetailProgress(optionIndex: number, detailIndex: number): number {
+    const detail = this.formObj.otherObj[optionIndex]?.details[detailIndex];
+    if (!detail) return 0;
+    
+    let completedFields = 0;
+    const totalFields = 3; // name, filename, price
+    
+    if (detail.name?.trim()) completedFields++;
+    if (detail.filename) completedFields++;
+    if (detail.price && detail.price !== '0') completedFields++;
+    
+    return Math.round((completedFields / totalFields) * 100);
+  }
+
+  // Get options progress percentage
+  getOptionsProgressPercentage(): number {
+    if (!this.formObj.otherObj || this.formObj.otherObj.length === 0) return 0;
+    
+    let completedOptions = 0;
+    const totalOptions = this.formObj.otherObj.length;
+    
+    for (let i = 0; i < totalOptions; i++) {
+      const option = this.formObj.otherObj[i];
+      if (option.main_title?.trim() && option.details && option.details.length > 0) {
+        const allDetailsComplete = option.details.every((detail: any) => 
+          detail.name?.trim() && detail.filename && detail.price && detail.price !== '0'
+        );
+        if (allDetailsComplete) {
+          completedOptions++;
+        }
+      }
+    }
+    
+    return Math.round((completedOptions / totalOptions) * 100);
+  }
+
+  // Get completed options count
+  getCompletedOptionsCount(): number {
+    if (!this.formObj.otherObj || this.formObj.otherObj.length === 0) return 0;
+    
+    let completedOptions = 0;
+    
+    for (let i = 0; i < this.formObj.otherObj.length; i++) {
+      const option = this.formObj.otherObj[i];
+      if (option.main_title?.trim() && option.details && option.details.length > 0) {
+        const allDetailsComplete = option.details.every((detail: any) => 
+          detail.name?.trim() && detail.filename && detail.price && detail.price !== '0'
+        );
+        if (allDetailsComplete) {
+          completedOptions++;
+        }
+      }
+    }
+    
+    return completedOptions;
+  }
+
+  // Get incomplete options count
+  getIncompleteOptionsCount(): number {
+    if (!this.formObj.otherObj || this.formObj.otherObj.length === 0) return 0;
+    
+    return this.formObj.otherObj.length - this.getCompletedOptionsCount();
+  }
+
+  // Get total options count
+  getTotalOptionsCount(): number {
+    return this.formObj.otherObj?.length || 0;
   }
 }
