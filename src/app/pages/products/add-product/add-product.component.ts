@@ -6,6 +6,7 @@ import { FileUploadService } from "src/app/service/file-upload.service"
 import { GlobleService } from "src/app/service/globle.service"
 import { HttpService } from "src/app/service/http.service"
 import { APIURLs } from "src/environments/apiUrls"
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 declare var $: any
 
 @Component({
@@ -82,6 +83,29 @@ export class AddProductComponent implements OnInit {
     ],
   }
 
+  public Editor: any = ClassicEditor;
+
+  public editorConfig: any = {
+    toolbar: [
+      'heading', '|',
+      'bold', 'italic', 'underline', 'strikethrough', '|',
+      'link', 'bulletedList', 'numberedList', '|',
+      'indent', 'outdent', '|',
+      'blockQuote', 'insertTable', '|',
+      'undo', 'redo'
+    ],
+    placeholder: 'Describe your product in detail...',
+    removePlugins: [
+      'Image',
+      'ImageCaption',
+      'ImageStyle',
+      'ImageToolbar',
+      'ImageUpload',
+      'CKFinder',
+      'EasyImage'
+    ]
+  };
+
   constructor(
     private api1: Api1Service,
     public gs: GlobleService,
@@ -91,6 +115,24 @@ export class AddProductComponent implements OnInit {
     private httpService: HttpService,
   ) {
     this.loadCategories()
+  }
+
+  // CKEditor Event Handlers
+  onEditorReady(editor: any): void {
+    console.log('Editor is ready', editor);
+
+    if (this.formObj.product_description && this.keyType === 'Edit') {
+      editor.setData(this.formObj.product_description);
+    }
+  }
+
+  onEditorChange(event: any): void {
+    // Different builds emit `event` differently
+    const data =
+      event.editor?.getData?.() ?? event?.source?.getData?.() ?? '';
+
+    this.formObj.product_description = data;
+    console.log('Editor content updated:', this.formObj.product_description);
   }
 
   ngOnInit(): void {

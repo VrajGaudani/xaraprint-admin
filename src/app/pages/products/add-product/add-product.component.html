@@ -147,14 +147,14 @@
                 <div class="col-12">
                   <div class="form-group">
                     <label class="form-label required">Product Description</label>
-                    <textarea 
-                      class="form-control" 
-                      rows="4"
-                      [class.is-invalid]="formErrors.product_description"
+                    <ckeditor 
+                      [editor]="Editor" 
+                      [data]="formObj.product_description || ''"
                       [disabled]="isDisable"
-                      [(ngModel)]="formObj.product_description" 
-                      name="product_description"
-                      placeholder="Describe your product in detail..."></textarea>
+                      (ready)="onEditorReady($event)"
+                      (change)="onEditorChange($event)">
+                      [config]="editorConfig">
+                    </ckeditor>
                     <div class="invalid-feedback">{{formErrors.product_description}}</div>
                   </div>
                 </div>

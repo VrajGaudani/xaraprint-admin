@@ -8,6 +8,7 @@ import { Ng2SearchPipeModule } from "ng2-search-filter";
 import { NgxPaginationModule } from "ngx-pagination";
 import { CommonModule } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 // import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -93,6 +94,7 @@ import { AddBannerComponent } from './pages/blogs/banners/add-banner/add-banner.
     ReactiveFormsModule,
     CommonModule,
     ToastrModule.forRoot(),
+    CKEditorModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
