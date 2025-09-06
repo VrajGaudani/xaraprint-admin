@@ -1,1 +1,174 @@
-<p>dashboard works!</p>
+<div class="pagetitle">
+  <h1>Dashboard</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+      <li class="breadcrumb-item active">Dashboard</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section dashboard">
+  <div class="row">
+    <!-- Date Filter -->
+    <div class="col-12 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Filter by Date Range</h5>
+          <div class="row">
+            <div class="col-md-3">
+              <label class="form-label">From Date</label>
+              <input type="date" class="form-control" [(ngModel)]="dateFilter.fromDate" (change)="applyDateFilter()">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">To Date</label>
+              <input type="date" class="form-control" [(ngModel)]="dateFilter.toDate" (change)="applyDateFilter()">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Quick Filter</label>
+              <select class="form-control" [(ngModel)]="quickFilter" (change)="applyQuickFilter()">
+                <option value="">Select Period</option>
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="thisWeek">This Week</option>
+                <option value="lastWeek">Last Week</option>
+                <option value="thisMonth">This Month</option>
+                <option value="lastMonth">Last Month</option>
+                <option value="thisYear">This Year</option>
+                <option value="lastYear">Last Year</option>
+              </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+              <button class="btn btn-outline-secondary" (click)="clearFilters()">Clear Filters</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="col-lg-3 col-md-6">
+      <div class="card info-card sales-card">
+        <div class="card-body d-flex">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-cart"></i>
+          </div>
+          <div class="ps-3">
+            <h6 class="card-title">Total Orders</h6>
+            <span class="text-success small pt-1 fw-bold">{{dashboardStats.totalOrders}}</span>
+            <span class="text-muted small pt-2 ps-1">{{dashboardStats.ordersChange}}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+      <div class="card info-card revenue-card">
+        <div class="card-body d-flex">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-currency-rupee"></i>
+          </div>
+          <div class="ps-3">
+            <h6 class="card-title">Revenue</h6>
+            <span class="text-success small pt-1 fw-bold">₹{{dashboardStats.totalRevenue | number:'1.2-2'}}</span>
+            <span class="text-muted small pt-2 ps-1">{{dashboardStats.revenueChange}}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+      <div class="card info-card customers-card">
+        <div class="card-body d-flex">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-people"></i>
+          </div>
+          <div class="ps-3">
+            <h6 class="card-title">Total Users</h6>
+            <span class="text-success small pt-1 fw-bold">{{dashboardStats.totalUsers}}</span>
+            <span class="text-muted small pt-2 ps-1">{{dashboardStats.usersChange}}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+      <div class="card info-card cancelled-card">
+        <div class="card-body d-flex">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-x-circle"></i>
+          </div>
+          <div class="ps-3">
+            <h6 class="card-title">Cancelled Orders</h6>
+            <span class="text-danger small pt-1 fw-bold">{{dashboardStats.cancelledOrders}}</span>
+            <span class="text-muted small pt-2 ps-1">{{dashboardStats.cancelledChange}}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+      <div class="card info-card return-card">
+        <div class="card-body d-flex">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-arrow-return-left"></i>
+          </div>
+          <div class="ps-3">
+            <h6 class="card-title">Return Orders</h6>
+            <span class="text-warning small pt-1 fw-bold">{{dashboardStats.returnOrders}}</span>
+            <span class="text-muted small pt-2 ps-1">{{dashboardStats.returnChange}}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">Recent Orders</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let order of recentOrders">
+                  <td>{{order.order_id}}</td>
+                  <td>{{order.customer_name}}</td>
+                  <td>₹{{order.total_amount | number:'1.2-2'}}</td>
+                  <td>
+                    <span class="badge" [ngClass]="getStatusClass(order.status)">
+                      {{order.status | titlecase}}
+                    </span>
+                  </td>
+                  <td>{{order.createdAt | date:'short'}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Status Chart -->
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">Order Status Distribution</h5>
+        </div>
+        <div class="card-body">
+          <canvas id="orderStatusChart" width="400" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

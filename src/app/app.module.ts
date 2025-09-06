@@ -45,6 +45,7 @@ import { MostLovedComponent } from './pages/products/most-loved/most-loved.compo
 import { MostPopularComponent } from './pages/products/most-popular/most-popular.component';
 import { BannersComponent } from './pages/blogs/banners/banners.component';
 import { AddBannerComponent } from './pages/blogs/banners/add-banner/add-banner.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { AddBannerComponent } from './pages/blogs/banners/add-banner/add-banner.
     MostLovedComponent,
     MostPopularComponent,
     BannersComponent,
-    AddBannerComponent
+    AddBannerComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,

@@ -11,16 +11,47 @@
 
 <section class="section py-0">
   <div class="row">
-    <div class="col-md-4 mb-4 align-self-center">
-      <input type="text" placeholder="Search" class="form-control" [(ngModel)]="searchText" name="searchText"
-        (keyup)="gs.getDataCount(allData, searchText)">
+    <div class="col-md-3 mb-4 align-self-center">
+      <input type="text" placeholder="Search products..." class="form-control" [(ngModel)]="searchText" name="searchText"
+        (keyup)="gs.getDataCount(filteredData, searchText)">
     </div>
 
     <div class="col-md-2 mb-4 align-self-center">
-      Total Record : {{gs.gridDataCount}}
+      <select class="form-control" [(ngModel)]="statusFilter" (change)="filterProducts()">
+        <option value="">All Status</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+        <option value="draft">Draft</option>
+      </select>
     </div>
 
-    <div class="col-md-6 mb-4 text-end">
+    <div class="col-md-2 mb-4 align-self-center">
+      <select class="form-control" [(ngModel)]="priceFilter" (change)="filterProducts()">
+        <option value="">All Prices</option>
+        <option value="0-100">₹0 - ₹100</option>
+        <option value="100-500">₹100 - ₹500</option>
+        <option value="500-1000">₹500 - ₹1000</option>
+        <option value="1000+">₹1000+</option>
+      </select>
+    </div>
+
+    <div class="col-md-2 mb-4 align-self-center">
+      <select class="form-control" [(ngModel)]="sortBy" (change)="sortProducts()">
+        <option value="createdAt">Sort by Date</option>
+        <option value="productname">Sort by Name</option>
+        <option value="price">Sort by Price</option>
+        <option value="discount">Sort by Discount</option>
+      </select>
+    </div>
+
+    <div class="col-md-1 mb-4 align-self-center">
+      <select class="form-control" [(ngModel)]="sortOrder" (change)="sortProducts()">
+        <option value="desc">Desc</option>
+        <option value="asc">Asc</option>
+      </select>
+    </div>
+
+    <div class="col-md-2 mb-4 text-end">
       <button type="button" class="btn btn-primary rounded-pill" [routerLink]="['/product/New/Add']"
         routerLinkActive="router-link-active">+ Add</button>
     </div>
@@ -44,7 +75,7 @@
             </thead>
             <tbody>
               <ng-container
-                *ngFor="let item of allData | filter: searchText | paginate: { itemsPerPage: 10, currentPage: p }; index as k">
+                *ngFor="let item of filteredData | filter: searchText | paginate: { itemsPerPage: 10, currentPage: p }; index as k">
                 <tr>
                   <th scope="row">{{k+1}}</th>
                   <td><img class="uploaded-image" [src]="item?.product_images?.[0]" alt="img"></td>
