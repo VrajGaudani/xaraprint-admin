@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "xara_admin": {
+    "theprintsplus_admin": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "xara_admin:build:production"
+              "browserTarget": "theprintsplus_admin:build:production"
             },
             "development": {
-              "browserTarget": "xara_admin:build:development"
+              "browserTarget": "theprintsplus_admin:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "xara_admin:build"
+            "browserTarget": "theprintsplus_admin:build"
           }
         },
         "test": {
